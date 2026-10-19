@@ -12,6 +12,31 @@ export function setupNotifications(): void {
   });
 }
 
+export function setupNotificationClickListener(
+  onResponse: (response: Notifications.NotificationResponse) => void
+): Notifications.EventSubscription {
+  return Notifications.addNotificationResponseReceivedListener(onResponse);
+}
+
+export async function sendNotificationNow(
+  title: string,
+  body: string,
+  data?: Record<string, unknown>
+): Promise<boolean> {
+  if (!(await ensurePermission())) return false;
+
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title,
+      body,
+      data,
+    },
+    trigger: null, // null trigger sends immediately
+  });
+
+  return true;
+}
+
 async function ensurePermission(): Promise<boolean> {
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync(CHANNEL, {
