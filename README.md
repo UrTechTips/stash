@@ -8,12 +8,14 @@ Stash is a privacy-first personal money manager for Android. It answers two prac
 Your financial data is stored locally on your device in an SQLite database rather than in a hosted service. 
 
 > **Note:** While Stash is built with React Native and Expo (supporting iOS and Web), **the current primary focus and testing is strictly for Android.**
-<!-- TODO: ADD IMAGES AFTER FIRST BUILD
+
 <p align="center">
-  <img src="docs/screenshot-dashboard.png" width="250" alt="Dashboard View">
-  <img src="docs/screenshot-verdict.png" width="250" alt="Purchase Verdict">
-  <img src="docs/screenshot-budget.png" width="250" alt="Budget View">
-</p> -->
+  <img src="docs/screenshots/Screenshot_1792389180.png" width="19%" alt="Screenshot 1">
+  <img src="docs/screenshots/Screenshot_1792389194.png" width="19%" alt="Screenshot 2">
+  <img src="docs/screenshots/Screenshot_1792389236.png" width="19%" alt="Screenshot 3">
+  <img src="docs/screenshots/Screenshot_1792389309.png" width="19%" alt="Screenshot 4">
+  <img src="docs/screenshots/Screenshot_1792389327.png" width="19%" alt="Screenshot 5">
+</p>
 
 ## Download & Install
 
