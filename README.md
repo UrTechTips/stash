@@ -10,11 +10,11 @@ Your financial data is stored locally on your device in an SQLite database rathe
 > **Note:** While Stash is built with React Native and Expo (supporting iOS and Web), **the current primary focus and testing is strictly for Android.**
 
 <p align="center">
-  <img src="docs/screenshots/Screenshot_1792389180.png" width="19%" alt="Screenshot 1">
-  <img src="docs/screenshots/Screenshot_1792389194.png" width="19%" alt="Screenshot 2">
-  <img src="docs/screenshots/Screenshot_1792389236.png" width="19%" alt="Screenshot 3">
-  <img src="docs/screenshots/Screenshot_1792389309.png" width="19%" alt="Screenshot 4">
-  <img src="docs/screenshots/Screenshot_1792389327.png" width="19%" alt="Screenshot 5">
+  <img src="docs/screenshots/Screenshot_1792389194.png" width="19%" alt="Homepage">
+  <img src="docs/screenshots/Screenshot_1792389236.png" width="19%" alt="Add transaction">
+  <img src="docs/screenshots/Screenshot_1792389309.png" width="19%" alt="Insights">
+  <img src="docs/screenshots/Screenshot_1792389180.png" width="19%" alt="Add goal">
+  <img src="docs/screenshots/Screenshot_1792389327.png" width="19%" alt="Goal insights">
 </p>
 
 ## Download & Install
