@@ -1,6 +1,8 @@
+import { AppUpdate, checkForUpdate, downloadAndInstallUpdate } from '@/services/updater';
+import * as Application from 'expo-application';
 import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { confirm, useAction } from '../app-state/actions';
 import { useApp, useQuery } from '../app-state/AppProvider';
@@ -34,6 +36,30 @@ export default function Settings() {
   const [saving, setSaving] = useState('');
   const [hourly, setHourly] = useState('');
   const [loaded, setLoaded] = useState(false);
+  const [update, setUpdate] = useState<AppUpdate | null>(null);
+
+  useEffect(() => {
+    const checkUpdate = async () => {
+      try {
+        const update = await checkForUpdate();
+        setUpdate(update);
+      } catch (error) {
+        console.error('Error checking for update:', error);
+      }
+    }
+    checkUpdate();
+  }, []);
+
+  const handleCheckForUpdate = async () => {
+    try {
+      const update = await checkForUpdate();
+      if (update) {
+        setUpdate(update);
+      } 
+    } catch (error) {
+      console.error('Error checking for update:', error);
+    }
+  }
 
   // Fill the form once when the saved data arrives (setting state while rendering is the supported way to do this).
   if (s && !loaded) {
@@ -87,6 +113,17 @@ export default function Settings() {
       await boot(db, today);
       Alert.alert('Backup restored', `${summary.accounts} accounts, ${summary.transactions} transactions and ${summary.goals} goals restored.`);
     });
+
+  const handleUpdate = async () => {
+    if (!update) return;
+    try {
+      await run(async () => {
+        await downloadAndInstallUpdate(update);
+      });
+    } catch (error) {
+      console.error('Error updating app:', error);
+    }
+  }
 
   return (
     <Screen>
@@ -179,6 +216,21 @@ export default function Settings() {
           <ToggleRow label="Goals" hint="A nudge on the day a goal should be safe to buy." value={s.goalReminders} onValueChange={(v) => save({ goalReminders: v })} />
           <ToggleRow label="Weekly backup" hint="A Sunday reminder to export your data." value={s.backupReminder} onValueChange={(v) => save({ backupReminder: v })} />
           <Text style={[typography.bodySmall, { color: colors.textSecondary }]}>Android asks for permission the first time you turn one on.</Text>
+        </Card>
+
+        <Card>
+          <Text style={[typography.title, { color: colors.textPrimary }]}>Updates</Text>
+          <Text style={[typography.bodySmall, { color: colors.textSecondary }]}>Current Version: {Application.nativeApplicationVersion}</Text>
+          <ToggleRow label="Automatic updates" hint="Automatically download and install updates when available." value={s.automaticUpdates} onValueChange={(v) => save({ automaticUpdates: v })} />
+          <Button label="Check for updates" kind="secondary" onPress={handleCheckForUpdate} />
+          {update && (
+            <>
+              <Text style={[typography.labelSmall, { color: colors.textPrimary }]}>
+                New Version Available: {update.version}
+              </Text>
+              <Button label="Update" kind="primary" onPress={handleUpdate} />
+            </>
+          )}
         </Card>
 
         <Card>

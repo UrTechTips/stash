@@ -5,10 +5,7 @@ import { loadContext } from '../services/context';
 import { planReminders } from '../services/reminders';
 import { useQuery } from './AppProvider';
 
-/**
- * Keeps the phone's scheduled notifications in step with the data: bill reminders, "goal should be
- * safe to buy" nudges and the weekly backup reminder. Does nothing until the user turns one on.
- */
+
 export function useReminderSync(): void {
   const { data } = useQuery(async (db, today) => {
     const settings = await loadSettings(db);
