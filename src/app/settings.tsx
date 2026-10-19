@@ -1,4 +1,4 @@
-import { AppUpdate, checkForUpdate } from '@/services/updater';
+import { AppUpdate, checkForUpdate, downloadAndInstallUpdate } from '@/services/updater';
 import * as Application from 'expo-application';
 import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
@@ -49,6 +49,17 @@ export default function Settings() {
     }
     checkUpdate();
   }, []);
+
+  const handleCheckForUpdate = async () => {
+    try {
+      const update = await checkForUpdate();
+      if (update) {
+        setUpdate(update);
+      } 
+    } catch (error) {
+      console.error('Error checking for update:', error);
+    }
+  }
 
   // Fill the form once when the saved data arrives (setting state while rendering is the supported way to do this).
   if (s && !loaded) {
@@ -102,6 +113,17 @@ export default function Settings() {
       await boot(db, today);
       Alert.alert('Backup restored', `${summary.accounts} accounts, ${summary.transactions} transactions and ${summary.goals} goals restored.`);
     });
+
+  const handleUpdate = async () => {
+    if (!update) return;
+    try {
+      await run(async () => {
+        await downloadAndInstallUpdate(update);
+      });
+    } catch (error) {
+      console.error('Error updating app:', error);
+    }
+  }
 
   return (
     <Screen>
@@ -200,12 +222,13 @@ export default function Settings() {
           <Text style={[typography.title, { color: colors.textPrimary }]}>Updates</Text>
           <Text style={[typography.bodySmall, { color: colors.textSecondary }]}>Current Version: {Application.nativeApplicationVersion}</Text>
           <ToggleRow label="Automatic updates" hint="Automatically download and install updates when available." value={s.automaticUpdates} onValueChange={(v) => save({ automaticUpdates: v })} />
+          <Button label="Check for updates" kind="secondary" onPress={handleCheckForUpdate} />
           {update && (
             <>
               <Text style={[typography.labelSmall, { color: colors.textPrimary }]}>
                 New Version Available: {update.version}
               </Text>
-              <Button label="Update" kind="primary" onPress={exportJson} />
+              <Button label="Update" kind="primary" onPress={handleUpdate} />
             </>
           )}
         </Card>
