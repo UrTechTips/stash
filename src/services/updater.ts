@@ -71,7 +71,13 @@ export const checkForUpdate = async (): Promise<AppUpdate | null> => {
         throw new Error(`APK asset (${manifest.apkAssetName}) not found in the latest release assets.`);
     }
 
-    const installedCode = Number(Application.nativeApplicationVersion ?? 0);
+    const installedCode = Number(Application.nativeBuildVersion);
+
+    if (!Number.isSafeInteger(installedCode) || installedCode < 1) {
+        throw new Error(
+            `Invalid installed build version: ${Application.nativeBuildVersion}`
+        );
+    }
     if (installedCode >= manifest.versionCode) {
         return null;
     }
