@@ -2,10 +2,6 @@ import { useCallback } from 'react';
 import { Alert } from 'react-native';
 import { ValidationError } from '../db/Db';
 
-/**
- * Runs a write and turns problems into a friendly alert instead of a crash.
- * Returns the result, or undefined if it failed. Validation messages are shown as they are.
- */
 export function useAction() {
   return useCallback(async <T,>(fn: () => Promise<T>): Promise<T | undefined> => {
     try {
@@ -21,7 +17,6 @@ export function useAction() {
   }, []);
 }
 
-/** Asks "are you sure?" and resolves to the answer. */
 export function confirm(title: string, message: string, confirmLabel = 'Delete', destructive = true): Promise<boolean> {
   return new Promise((resolve) => {
     Alert.alert(title, message, [

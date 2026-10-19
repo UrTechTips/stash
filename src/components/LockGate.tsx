@@ -5,16 +5,12 @@ import { useTheme } from '../theme/ThemeProvider';
 import { typography } from '../theme/typography';
 import { Button } from './forms';
 
-/**
- * Hides the app behind the phone's unlock prompt (fingerprint, face, or the device PIN/pattern)
- * when "App lock" is on. It locks again whenever the app goes to the background.
- */
 export function LockGate({ enabled, children }: { enabled: boolean; children: React.ReactNode }) {
   const { colors } = useTheme();
   const [locked, setLocked] = useState(enabled);
+  const [appState, setAppState] = useState(AppState.currentState);
   const prompting = useRef(false);
 
-  // Asks for the phone's unlock prompt. Used by the button, and automatically while locked.
   const tryUnlock = useCallback(async () => {
     if (prompting.current) return false;
     prompting.current = true;
@@ -33,7 +29,6 @@ export function LockGate({ enabled, children }: { enabled: boolean; children: Re
     return () => sub.remove();
   }, [enabled]);
 
-  // While locked, ask for the unlock prompt straight away.
   useEffect(() => {
     if (!enabled || !locked) return;
     let cancelled = false;
