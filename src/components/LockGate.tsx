@@ -24,13 +24,14 @@ export function LockGate({ enabled, children }: { enabled: boolean; children: Re
   useEffect(() => {
     if (!enabled) return;
     const sub = AppState.addEventListener('change', (state) => {
+      setAppState(state);
       if (state === 'background') setLocked(true);
     });
     return () => sub.remove();
   }, [enabled]);
 
   useEffect(() => {
-    if (!enabled || !locked) return;
+    if (!enabled || !locked || appState !== 'active') return;
     let cancelled = false;
     (async () => {
       if (prompting.current) return;
