@@ -16,7 +16,6 @@ import { ThemeProvider, useTheme } from '../theme/ThemeProvider';
 SplashScreen.preventAutoHideAsync();
 setupNotifications();
 
-
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     Fraunces_600SemiBold,
