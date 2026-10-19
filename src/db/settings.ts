@@ -30,6 +30,7 @@ export interface AppSettings {
   billReminders: boolean;
   goalReminders: boolean;
   backupReminder: boolean;
+  automaticUpdates: boolean;
   onboarded: boolean;
 }
 
@@ -49,6 +50,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   billReminders: false,
   goalReminders: false,
   backupReminder: false,
+  automaticUpdates: true,
   onboarded: false,
 };
 
