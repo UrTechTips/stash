@@ -1,7 +1,3 @@
-/**
- * The only thing the rest of the app knows about storage. A real phone uses expo-sqlite
- * (expoDb.ts); tests use Node's built-in SQLite (testing.ts). Swap it and nothing else changes.
- */
 export type SqlValue = string | number | null;
 
 export interface RunResult {
