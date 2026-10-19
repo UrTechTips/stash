@@ -1,9 +1,15 @@
-
 name: Generate Android Update Manifest
 
 on:
   release:
     types: [published]
+
+  workflow_call:
+    inputs:
+      tag:
+        description: "Release tag, for example v1.0.1"
+        required: true
+        type: string
 
   # Also allows processing an existing release manually.
   workflow_dispatch:
@@ -20,6 +26,7 @@ jobs:
   generate-manifest:
     if: ${{ github.event_name != 'release' || !github.event.release.prerelease }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     env:
       GH_TOKEN: ${{ github.token }}
@@ -33,10 +40,12 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      # cmdline-tools (apkanalyzer) are added to PATH automatically.
+      # build-tools is needed only for apksigner (signing cert fingerprint).
       - name: Set up Android command-line tools
         uses: android-actions/setup-android@v4
         with:
-          packages: ''
+          packages: 'build-tools;35.0.0'
 
       - name: Download universal APK from release
         run: |
@@ -45,10 +54,21 @@ jobs:
 
           APK_NAME="stash-${RELEASE_TAG}-universal.apk"
 
-          gh release download "$RELEASE_TAG" \
-            --repo "$REPOSITORY" \
-            --pattern "$APK_NAME" \
-            --dir release-assets
+          # Retry: the asset may not be attached yet when the release event fires.
+          for i in 1 2 3 4 5 6; do
+            if gh release download "$RELEASE_TAG" \
+                 --repo "$REPOSITORY" \
+                 --pattern "$APK_NAME" \
+                 --dir release-assets; then
+              break
+            fi
+            if [ "$i" -eq 6 ]; then
+              echo "::error::$APK_NAME not found on release $RELEASE_TAG after retries"
+              exit 1
+            fi
+            echo "Asset not available yet (attempt $i/6), retrying in 20s..."
+            sleep 20
+          done
 
           APK_PATH="release-assets/$APK_NAME"
           test -s "$APK_PATH"
@@ -78,10 +98,32 @@ jobs:
           fi
 
           APK_SHA256="$(sha256sum "$APK_PATH" | awk '{print $1}')"
+          APK_SIZE="$(stat -c %s "$APK_PATH")"
+
+          # Signing certificate fingerprint (lets the app verify the signer too).
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -n 1)"
+          if [ -z "$APKSIGNER" ]; then
+            echo "::error::apksigner not found under $ANDROID_HOME/build-tools"
+            exit 1
+          fi
+          CERT_SHA256="$("$APKSIGNER" verify --print-certs "$APK_PATH" \
+            | awk -F': ' '/Signer #1 certificate SHA-256 digest/ {print $2; exit}' \
+            | tr -d '\r\n')"
+          if [ -z "$CERT_SHA256" ]; then
+            echo "::error::Could not read signing certificate (is the APK signed?)"
+            exit 1
+          fi
 
           RELEASE_INFO="$(gh api "repos/$REPOSITORY/releases/tags/$RELEASE_TAG")"
           RELEASE_URL="$(printf '%s' "$RELEASE_INFO" | jq -r '.html_url')"
           RELEASE_NOTES="$(printf '%s' "$RELEASE_INFO" | jq -r '.body // ""')"
+          DOWNLOAD_URL="$(printf '%s' "$RELEASE_INFO" | jq -r --arg name "$APK_NAME" \
+            '.assets[] | select(.name == $name) | .browser_download_url')"
+
+          if [ -z "$DOWNLOAD_URL" ]; then
+            echo "::error::Could not resolve download URL for $APK_NAME"
+            exit 1
+          fi
 
           jq -n \
             --arg version "$APK_VERSION" \
@@ -89,7 +131,10 @@ jobs:
             --arg packageName "$PACKAGE_NAME" \
             --arg releaseTag "$RELEASE_TAG" \
             --arg apkAssetName "$APK_NAME" \
+            --arg downloadUrl "$DOWNLOAD_URL" \
+            --argjson apkSize "$APK_SIZE" \
             --arg sha256 "$APK_SHA256" \
+            --arg signingCertSha256 "$CERT_SHA256" \
             --arg releaseUrl "$RELEASE_URL" \
             --arg releaseNotes "$RELEASE_NOTES" \
             '{
@@ -99,7 +144,10 @@ jobs:
               packageName: $packageName,
               releaseTag: $releaseTag,
               apkAssetName: $apkAssetName,
+              downloadUrl: $downloadUrl,
+              apkSize: $apkSize,
               sha256: $sha256,
+              signingCertSha256: $signingCertSha256,
               releaseUrl: $releaseUrl,
               releaseNotes: $releaseNotes
             }' > update.json
