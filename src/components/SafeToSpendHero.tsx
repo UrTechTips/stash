@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyleSheet, Text, View, type ViewStyle } from 'react-native';
 import { formatMoney, type Minor } from '../lib/money';
 import { heroShape } from '../theme/layout';
@@ -6,12 +5,8 @@ import { useTheme } from '../theme/ThemeProvider';
 import { typography } from '../theme/typography';
 import { AllowanceBar } from './Progress';
 
-/**
- * The Home screen's one big number: what you can still spend today.
- *
- * The inputs come from the allowance function in the engine (section 5 of the
- * project doc); this component only draws them.
- */
+// TODO: Make a card themed component that shows all accounts and balances
+
 export function SafeToSpendHero({
   remainingToday,
   allowanceToday,
@@ -19,13 +14,9 @@ export function SafeToSpendHero({
   overBudgetBy = 0,
   style,
 }: {
-  /** Daily allowance minus what you spent today (may be negative). */
   remainingToday: Minor;
-  /** Today's full allowance. */
   allowanceToday: Minor;
-  /** Days left in the month, including today. */
   daysLeft: number;
-  /** When the month's budget is already blown, how far over. */
   overBudgetBy?: Minor;
   style?: ViewStyle;
 }) {
