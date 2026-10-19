@@ -1,5 +1,6 @@
 import { DEFAULT_TIERS } from '../engine/defaults';
-import type { AllowanceMode, EngineSettings, Tier } from '../engine/types';
+import type { EngineSettings, Tier } from '../engine/types';
+import type { AllowanceMode } from '../engine/types';
 import type { Db } from './Db';
 import type { Minor } from './types';
 
@@ -29,7 +30,6 @@ export interface AppSettings {
   billReminders: boolean;
   goalReminders: boolean;
   backupReminder: boolean;
-  automaticUpdates: boolean;
   onboarded: boolean;
 }
 
@@ -50,7 +50,6 @@ export const DEFAULT_SETTINGS: AppSettings = {
   goalReminders: false,
   backupReminder: false,
   onboarded: false,
-  automaticUpdates: true,
 };
 
 // Infinity cannot be written as JSON, so the last tier is stored with a very large number.
