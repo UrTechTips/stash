@@ -4,20 +4,21 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import { AppProvider, useQuery } from '../app-state/AppProvider';
-import { useReminderSync } from '../app-state/useReminderSync';
+import React, { useEffect } from 'react';
 import { LockGate } from '../components/LockGate';
 import { loadSettings } from '../db/settings';
+import { AppProvider, useQuery } from '../app-state/AppProvider';
+import { useReminderSync } from '../app-state/useReminderSync';
 import { setupNotifications } from '../platform/notifications';
 import { needsOnboarding } from '../services/bootstrap';
 import { ThemeProvider, useTheme } from '../theme/ThemeProvider';
 
+// Keep the splash screen up until the fonts and the database are ready.
 SplashScreen.preventAutoHideAsync();
 setupNotifications();
 
-
 export default function RootLayout() {
+  // The names here must match src/theme/typography.ts.
   const [fontsLoaded] = useFonts({
     Fraunces_600SemiBold,
     Manrope_500Medium,
@@ -39,6 +40,7 @@ export default function RootLayout() {
   );
 }
 
+/** Applies the theme the user picked in Settings and the app lock. */
 function ThemedApp() {
   const { data: settings } = useQuery((db) => loadSettings(db));
   if (!settings) return null;
