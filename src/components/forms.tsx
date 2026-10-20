@@ -1,9 +1,12 @@
 import { useHaptics } from '@/hooks/useHaptics';
 import { Ionicons } from '@expo/vector-icons';
+import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
+  Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -12,7 +15,7 @@ import {
   TextInput,
   View,
   type TextInputProps,
-  type ViewStyle,
+  type ViewStyle
 } from 'react-native';
 import { addDays, dayLabel, type ISODate } from '../engine/dates';
 import { getCurrency } from '../lib/money';
@@ -21,6 +24,16 @@ import { useTheme } from '../theme/ThemeProvider';
 import { fonts, typography } from '../theme/typography';
 import { ChoiceChip } from './ChoiceChip';
 import { Screen } from './Screen';
+
+// Helper funcs
+
+const isoToDate = (iso: ISODate): Date => {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d);
+};
+const dateToIso = (dt: Date): ISODate =>
+  `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}` as ISODate;
+
 
 /** Top bar for pushed screens: a back arrow, the title, and an optional action on the right. */
 export function ScreenHeader({ title, right, onBack }: { title: string; right?: React.ReactNode; onBack?: () => void }) {
@@ -315,7 +328,6 @@ export function Stepper({
   );
 }
 
-/** Pick a date: Today and Yesterday chips plus day-by-day arrows. No calendar widget needed. */
 export function DateField({
   label = 'Date',
   value,
@@ -330,7 +342,25 @@ export function DateField({
   allowFuture?: boolean;
 }) {
   const { colors } = useTheme();
+  const [showIosPicker, setShowIosPicker] = useState(false);
   const canForward = allowFuture || value < today;
+  const maximumDate = allowFuture ? undefined : isoToDate(today);
+ 
+  const openPicker = () => {
+    if (Platform.OS === 'android') {
+      DateTimePickerAndroid.open({
+        value: isoToDate(value),
+        mode: 'date',
+        maximumDate,
+        onChange: (event, date) => {
+          if (event.type === 'set' && date) onChange(dateToIso(date));
+        },
+      });
+    } else {
+      setShowIosPicker(true);
+    }
+  };
+ 
   return (
     <Field label={label}>
       <View style={styles.stepper}>
@@ -342,7 +372,18 @@ export function DateField({
         >
           <Ionicons name="chevron-back" size={22} color={colors.textPrimary} />
         </Pressable>
-        <Text style={[typography.title, styles.stepValue, { color: colors.textPrimary }]}>{dayLabel(value, today)}</Text>
+ 
+        {/* Tap the date to jump anywhere via the calendar */}
+        <Pressable
+          onPress={useHaptics(openPicker, 'light')}
+          accessibilityRole="button"
+          accessibilityLabel={`${dayLabel(value, today)}. Tap to pick a date from the calendar`}
+          style={styles.dateTap}
+        >
+          <Text style={[typography.title, { color: colors.textPrimary }]}>{dayLabel(value, today)}</Text>
+          <Ionicons name="calendar-outline" size={18} color={colors.textPrimary} />
+        </Pressable>
+ 
         <Pressable
           onPress={useHaptics(() => canForward && onChange(addDays(value, 1)), 'light')}
           disabled={!canForward}
@@ -353,10 +394,31 @@ export function DateField({
           <Ionicons name="chevron-forward" size={22} color={colors.textPrimary} />
         </Pressable>
       </View>
+ 
       <View style={styles.chips}>
         <ChoiceChip label="Today" selected={value === today} onPress={useHaptics(() => onChange(today), 'light')} />
         <ChoiceChip label="Yesterday" selected={value === addDays(today, -1)} onPress={useHaptics(() => onChange(addDays(today, -1)), 'light')} />
       </View>
+ 
+      {/* iOS has no imperative picker, so show the inline calendar in a modal */}
+      {Platform.OS === 'ios' && (
+        <Modal visible={showIosPicker} transparent animationType="fade" onRequestClose={() => setShowIosPicker(false)}>
+          <Pressable style={styles.pickerBackdrop} onPress={() => setShowIosPicker(false)}>
+            <Pressable style={[styles.pickerSheet, { backgroundColor: colors.surface, borderColor: colors.outline }]}>
+              <DateTimePicker
+                value={isoToDate(value)}
+                mode="date"
+                display="inline"
+                maximumDate={maximumDate}
+                onChange={(_, date) => {
+                  setShowIosPicker(false);
+                  if (date) onChange(dateToIso(date));
+                }}
+              />
+            </Pressable>
+          </Pressable>
+        </Modal>
+      )}
     </Field>
   );
 }
@@ -395,4 +457,7 @@ const styles = StyleSheet.create({
   stepButton: { width: MIN_TOUCH, height: MIN_TOUCH, borderRadius: MIN_TOUCH / 2, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   stepValue: { flex: 1, textAlign: 'center' },
   linkRow: { minHeight: 56, flexDirection: 'row', alignItems: 'center', gap: 8 },
+  dateTap: { flex: 1, minHeight: MIN_TOUCH, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
+  pickerBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center', padding: 24 },
+  pickerSheet: { borderWidth: 1, borderRadius: radius.goal, padding: 12 },
 });

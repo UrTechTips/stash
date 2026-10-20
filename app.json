@@ -2,7 +2,7 @@
   "expo": {
     "name": "Stash",
     "slug": "stash",
-    "version": "1.1.2",
+    "version": "1.1.4",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "stash",
@@ -13,7 +13,7 @@
     },
     "android": {
       "package": "me.sreenadh.stash",
-      "versionCode": 12,
+      "versionCode": 14,
       "adaptiveIcon": {
         "backgroundColor": "#0A3A2E",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -67,7 +67,9 @@
         }
       ],
       "./plugins/withSplitApks.js",
-      "./plugins/withReleaseSigning.js"
+      "./plugins/withReleaseSigning.js",
+      "./plugins/withNameConvention.js",
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": false,
