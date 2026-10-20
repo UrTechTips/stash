@@ -2,7 +2,7 @@
   "expo": {
     "name": "Stash",
     "slug": "stash",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "stash",
@@ -13,6 +13,7 @@
     },
     "android": {
       "package": "me.sreenadh.stash",
+      "versionCode": 12,
       "adaptiveIcon": {
         "backgroundColor": "#0A3A2E",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -64,7 +65,9 @@
             "useLegacyPackaging": true
           }
         }
-      ]
+      ],
+      "./plugins/withSplitApks.js",
+      "./plugins/withReleaseSigning.js"
     ],
     "experiments": {
       "typedRoutes": false,
