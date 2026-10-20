@@ -1,5 +1,6 @@
 import * as Application from 'expo-application';
 import * as Crypto from 'expo-crypto';
+import * as Device from 'expo-device';
 import * as FileSystem from "expo-file-system";
 import * as LegacyFileSystem from "expo-file-system/legacy";
 import * as IntentLauncher from "expo-intent-launcher";
@@ -23,15 +24,50 @@ type UpdateManifest = {
   versionCode: number;
   packageName: string;
   releaseTag: string;
+  apkAssets?: Record<string, string>;
+  sha256s?: Record<string, string>;
   apkAssetName: string;
   sha256: string;
   releaseUrl: string;
   releaseNotes: string;
 };
 
-export type AppUpdate = UpdateManifest & {
+export type AppUpdate = {
+  version: string;
+  versionCode: number;
   apkUrl: string;
+  sha256: string;
 };
+
+const resolveApkTarget = (manifest: UpdateManifest): { assetName: string; sha256: string } => {
+    if (manifest.apkAssets && manifest.sha256s) {
+        const supportedAbis = Device.supportedCpuArchitectures || [];
+
+        for (const abi of supportedAbis) {
+            if (manifest.apkAssets[abi] && manifest.sha256s[abi]) {
+                return {
+                    assetName: manifest.apkAssets[abi],
+                    sha256: manifest.sha256s[abi],
+                }
+            }
+        }
+
+        if (manifest.apkAssets['universal'] && manifest.sha256s['universal']) {
+            return {
+                assetName: manifest.apkAssets['universal'],
+                sha256: manifest.sha256s['universal'],
+            }
+        }
+    }
+
+    if (manifest.apkAssetName && manifest.sha256) {
+        return {
+            assetName: manifest.apkAssetName,
+            sha256: manifest.sha256,
+        };
+    }
+    throw new Error('No suitable APK asset found for the current device architecture.');
+}
 
 export const checkForUpdate = async (): Promise<AppUpdate | null> => {
     const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/releases/latest`, {
@@ -58,17 +94,12 @@ export const checkForUpdate = async (): Promise<AppUpdate | null> => {
 
     const manifest: UpdateManifest = await manifestRes.json();
 
-    if (manifest.schemaVersion !== 1 || !Number.isSafeInteger(manifest.versionCode) || typeof manifest.apkAssetName !== "string" || typeof manifest.sha256 !== "string") {
+    if (manifest.schemaVersion !== 1 || !Number.isSafeInteger(manifest.versionCode)) {
         throw new Error('Invalid update manifest format.');
     }
 
     if (manifest.packageName !== Application.applicationId) {
         throw new Error(`Update manifest package name (${manifest.packageName}) does not match the current application package name (${Application.applicationId}).`);
-    }
-
-    const apkAsset = release.assets.find(asset => asset.name === manifest.apkAssetName);
-    if (!apkAsset) {
-        throw new Error(`APK asset (${manifest.apkAssetName}) not found in the latest release assets.`);
     }
 
     const installedCode = Number(Application.nativeBuildVersion);
@@ -82,9 +113,18 @@ export const checkForUpdate = async (): Promise<AppUpdate | null> => {
         return null;
     }
 
+    const target = resolveApkTarget(manifest);
+    const apkAsset = release.assets.find(asset => asset.name === target.assetName);
+
+    if (!apkAsset) {
+        throw new Error(`Target apk asset (${target.assetName}) not found in the latest release assets.`);
+    }
+
     return {
-        ...manifest,
+        version: manifest.version,
+        versionCode: manifest.versionCode,
         apkUrl: apkAsset.browser_download_url,
+        sha256: target.sha256,
     };
 }
 
@@ -108,7 +148,6 @@ export const downloadAndInstallUpdate = async (update: AppUpdate): Promise<void>
 
     let downloadedFile: FileSystem.File;
     try {
-        // FIX: Use the reliable legacy download method which handles GitHub's 302 redirects properly
         const downloadResult = await LegacyFileSystem.downloadAsync(
             update.apkUrl, 
             destination.uri
@@ -120,7 +159,6 @@ export const downloadAndInstallUpdate = async (update: AppUpdate): Promise<void>
             throw new Error(`Download failed with HTTP status ${downloadResult.status}`);
         }
 
-        // The file is now safely on disk, so we can resume using the new File API
         downloadedFile = destination;
         const actualHash = await sha256Hex(downloadedFile);
         

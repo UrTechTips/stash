@@ -47,3 +47,5 @@ example
 credentials.json
 
 .github/prompts/
+
+*.jks
