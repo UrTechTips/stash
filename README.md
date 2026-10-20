@@ -10,9 +10,9 @@ Your financial data is stored locally on your device in an SQLite database rathe
 ## ⚠️ Important Update Notice (Version 1.1.3 & Newer)
 
 > **Note on App Signing & Data Safety:**
-> Due to a security key rotation, all releases **starting from v1.1.2** are signed with a new cryptographic keystore. 
+> Due to a security key rotation, all releases **starting from v1.1.3** are signed with a new cryptographic keystore. 
 > 
-> Direct in-place updates from **v1.1.1 or earlier** will fail with an `App Not Installed` or `Signature Mismatch` error. Because uninstalling an Android app erases its local data, **you must export a data backup before uninstalling**.
+> Direct in-place updates from **v1.1.2 or earlier** will fail with an `App Not Installed` or `Signature Mismatch` error. Because uninstalling an Android app erases its local data, **you must export a data backup before uninstalling**.
 
 #### How to update to v1.1.2+:
 1. **Export Backup:** Open your current app, go to **Settings**, and export your data as a `.json` file to your device.
