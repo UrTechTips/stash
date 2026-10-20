@@ -7,6 +7,21 @@ Stash is a privacy-first personal money manager for Android. It answers two prac
 
 Your financial data is stored locally on your device in an SQLite database rather than in a hosted service. 
 
+## ⚠️ Important Update Notice (Version 1.1.2 & Newer)
+
+> **Note on App Signing & Data Safety:**
+> Due to a security key rotation, all releases **starting from v1.1.2** are signed with a new cryptographic keystore. 
+> 
+> Direct in-place updates from **v1.1.1 or earlier** will fail with an `App Not Installed` or `Signature Mismatch` error. Because uninstalling an Android app erases its local data, **you must export a data backup before uninstalling**.
+
+#### How to update to v1.1.2+:
+1. **Export Backup:** Open your current app, go to **Settings**, and export your data as a `.json` file to your device.
+2. **Uninstall:** Uninstall the old version of the app from your device.
+3. **Install:** Download the latest APK (v1.1.2 or higher) from the [Releases page](../../releases) and install it manually.
+4. **Restore Data:** Open the new app, go to **Settings**, and import your saved `.json` backup file to restore your data.
+
+*Note: Future updates released after v1.1.2 will update smoothly without requiring a re-installation or manual backup.*
+
 > **Note:** While Stash is built with React Native and Expo (supporting iOS and Web), **the current primary focus and testing is strictly for Android.**
 
 <p align="center">
