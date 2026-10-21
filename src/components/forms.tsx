@@ -185,7 +185,7 @@ export function OptionChips<T extends string | number>({
   const body = (
     <View style={styles.chips}>
       {options.map((o) => (
-        <ChoiceChip key={String(o.value)} label={o.label} leadingEmoji={o.emoji} selected={o.value === value} onPress={() => onChange(o.value)} />
+        <ChoiceChip key={String(o.value)} label={o.label} leadingEmoji={o.emoji} selected={o.value === value} onPress={useHaptics(() => onChange(o.value), "light")} />
       ))}
     </View>
   );
@@ -220,7 +220,7 @@ export function ToggleRow({
       </View>
       <Switch
         value={value}
-        onValueChange={onValueChange}
+        onValueChange={useHaptics((v) => onValueChange(v), "light")}
         disabled={disabled}
         accessibilityLabel={label}
         trackColor={{ false: colors.outline, true: colors.primary }}

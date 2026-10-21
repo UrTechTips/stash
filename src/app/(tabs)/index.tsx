@@ -1,3 +1,4 @@
+import { useHaptics } from '@/hooks/useHaptics';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
@@ -19,13 +20,12 @@ import {
 } from '../../components';
 import { Button, Card } from '../../components/forms';
 import { listTransactions } from '../../db/transactions';
-import { dayLabel, monthLabel, shortDate } from '../../engine/dates';
-import { formatMoney } from '../../lib/money';
+import { dayLabel, monthLabel } from '../../engine/dates';
 import { loadContext } from '../../services/context';
 import { evaluateAll, topGoal } from '../../services/goals';
+import { checksToUi, headlineFor } from '../../services/ui';
 import { useTheme } from '../../theme/ThemeProvider';
 import { typography } from '../../theme/typography';
-import { checksToUi, headlineFor } from '../../services/ui';
 
 export default function Home() {
   const router = useRouter();
@@ -48,8 +48,8 @@ export default function Home() {
         <View style={styles.topRow}>
           <Text style={[typography.headline, { color: colors.textPrimary }]}>{monthLabel(ctx.month)}</Text>
           <View style={styles.topIcons}>
-            <IconButton name="stats-chart" label="Insights" onPress={() => router.push('/insights')} />
-            <IconButton name="settings-outline" label="Settings" onPress={() => router.push('/settings')} />
+            <IconButton name="stats-chart" label="Insights" onPress={useHaptics(() => router.push('/insights'), "medium")} />
+            <IconButton name="settings-outline" label="Settings" onPress={useHaptics(() => router.push('/settings'), "medium")} />
           </View>
         </View>
 
@@ -78,7 +78,7 @@ export default function Home() {
 
         {ctx.upcomingBills.length > 0 ? (
           <>
-            <SectionHeader title="Coming up" actionLabel="Bills" onAction={() => router.push('/recurring')} />
+            <SectionHeader title="Coming up" actionLabel="Bills" onAction={useHaptics(() => router.push('/recurring'), "light")} />
             {ctx.upcomingBills.slice(0, 3).map((o) => (
               <View key={`${o.rule.id}-${o.date}`} style={styles.billRow}>
                 <CategoryBadge emoji="🧾" tint="#2F7FD0" />
@@ -94,7 +94,7 @@ export default function Home() {
 
         {ctx.budget ? (
           <>
-            <SectionHeader title="This month" actionLabel="Budget" onAction={() => router.push('/budget')} />
+            <SectionHeader title="This month" actionLabel="Budget" onAction={useHaptics(() => router.push('/budget'), "light")} />
             <BudgetRow name="All spending" spentMinor={ctx.spentThisMonth} limitMinor={ctx.budgetTotal} paceFraction={a.paceFraction} />
           </>
         ) : null}
@@ -124,11 +124,11 @@ export default function Home() {
 
         {recent.length > 0 ? (
           <>
-            <SectionHeader title="Recent" actionLabel="See all" onAction={() => router.push('/activity')} />
+            <SectionHeader title="Recent" actionLabel="See all" onAction={useHaptics(() => router.push('/activity'), "light")} />
             {recent.map((t, i) => (
               <View key={t.id}>
                 {i === 0 || recent[i - 1].date !== t.date ? <DayHeader label={dayLabel(t.date, ctx.today)} spentMinor={0} /> : null}
-                <TransactionRow {...txRowProps(t)} onPress={() => router.push({ pathname: '/transaction/[id]', params: { id: String(t.id) } })} />
+                <TransactionRow {...txRowProps(t)} onPress={useHaptics(() => router.push({ pathname: '/transaction/[id]', params: { id: String(t.id) } }), "light")} />
               </View>
             ))}
           </>

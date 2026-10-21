@@ -1,5 +1,6 @@
+import { useHaptics } from '@/hooks/useHaptics';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useQuery } from '../../app-state/AppProvider';
 import { openQuickAdd } from '../../app-state/quickAdd';
@@ -36,7 +37,7 @@ export default function Accounts() {
         spendable={a.isSpendable}
         emoji={t.emoji}
         tint={TINTS[i % TINTS.length]}
-        onPress={() => open(String(a.id))}
+        onPress={useHaptics(() => open(String(a.id)), "light")}
       />
     );
   };
@@ -58,14 +59,14 @@ export default function Accounts() {
         </View>
 
         {active.length === 0 ? (
-          <EmptyState title="No accounts yet" body="Add the places your money lives: bank, UPI, cash." actionLabel="Add account" onAction={() => open('new')} />
+          <EmptyState title="No accounts yet" body="Add the places your money lives: bank, UPI, cash." actionLabel="Add account" onAction={useHaptics(() => open('new'), "medium")} />
         ) : (
           active.map(row)
         )}
 
         {archived.length > 0 ? (
           <>
-            <SectionHeader title={`Archived (${archived.length})`} actionLabel={showArchived ? 'Hide' : 'Show'} onAction={() => setShowArchived((s) => !s)} />
+            <SectionHeader title={`Archived (${archived.length})`} actionLabel={showArchived ? 'Hide' : 'Show'} onAction={useHaptics(() => setShowArchived((s) => !s), "light")} />
             {showArchived ? archived.map(row) : null}
           </>
         ) : null}
