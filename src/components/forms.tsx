@@ -182,10 +182,11 @@ export function OptionChips<T extends string | number>({
   onChange: (value: T) => void;
   hint?: string;
 }) {
+  const haptics = useHaptics();
   const body = (
     <View style={styles.chips}>
       {options.map((o) => (
-        <ChoiceChip key={String(o.value)} label={o.label} leadingEmoji={o.emoji} selected={o.value === value} onPress={useHaptics(() => onChange(o.value), "light")} />
+        <ChoiceChip key={String(o.value)} label={o.label} leadingEmoji={o.emoji} selected={o.value === value} onPress={haptics(() => onChange(o.value), "light")} />
       ))}
     </View>
   );
@@ -212,6 +213,7 @@ export function ToggleRow({
   disabled?: boolean;
 }) {
   const { colors } = useTheme();
+  const haptics = useHaptics();
   return (
     <View style={[styles.toggleRow, disabled && { opacity: 0.5 }]}>
       <View style={styles.fill}>
@@ -220,7 +222,7 @@ export function ToggleRow({
       </View>
       <Switch
         value={value}
-        onValueChange={useHaptics((v) => onValueChange(v), "light")}
+        onValueChange={haptics((v) => onValueChange(v), "light")}
         disabled={disabled}
         accessibilityLabel={label}
         trackColor={{ false: colors.outline, true: colors.primary }}
@@ -252,9 +254,10 @@ export function Button({
     danger: { bg: 'transparent', fg: colors.stopText, border: colors.stop },
     ghost: { bg: 'transparent', fg: colors.primary, border: 'transparent' },
   }[kind];
+  const haptics = useHaptics();
   return (
     <Pressable
-      onPress={useHaptics(onPress, 'medium')}
+      onPress={haptics(onPress, 'medium')}
       disabled={disabled}
       accessibilityRole="button"
       accessibilityState={{ disabled: !!disabled }}
@@ -342,6 +345,7 @@ export function DateField({
   allowFuture?: boolean;
 }) {
   const { colors } = useTheme();
+  const haptics = useHaptics();
   const [showIosPicker, setShowIosPicker] = useState(false);
   const canForward = allowFuture || value < today;
   const maximumDate = allowFuture ? undefined : isoToDate(today);
@@ -360,12 +364,11 @@ export function DateField({
       setShowIosPicker(true);
     }
   };
- 
   return (
     <Field label={label}>
       <View style={styles.stepper}>
         <Pressable
-          onPress={useHaptics(() => onChange(addDays(value, -1)), 'light')}
+          onPress={haptics(() => onChange(addDays(value, -1)), 'light')}
           accessibilityRole="button"
           accessibilityLabel="Previous day"
           style={[styles.stepButton, { borderColor: colors.outline }]}
@@ -375,7 +378,7 @@ export function DateField({
  
         {/* Tap the date to jump anywhere via the calendar */}
         <Pressable
-          onPress={useHaptics(openPicker, 'light')}
+          onPress={haptics(openPicker, 'light')}
           accessibilityRole="button"
           accessibilityLabel={`${dayLabel(value, today)}. Tap to pick a date from the calendar`}
           style={styles.dateTap}
@@ -385,7 +388,7 @@ export function DateField({
         </Pressable>
  
         <Pressable
-          onPress={useHaptics(() => canForward && onChange(addDays(value, 1)), 'light')}
+          onPress={haptics(() => canForward && onChange(addDays(value, 1)), 'light')}
           disabled={!canForward}
           accessibilityRole="button"
           accessibilityLabel="Next day"
@@ -396,8 +399,8 @@ export function DateField({
       </View>
  
       <View style={styles.chips}>
-        <ChoiceChip label="Today" selected={value === today} onPress={useHaptics(() => onChange(today), 'light')} />
-        <ChoiceChip label="Yesterday" selected={value === addDays(today, -1)} onPress={useHaptics(() => onChange(addDays(today, -1)), 'light')} />
+        <ChoiceChip label="Today" selected={value === today} onPress={haptics(() => onChange(today), 'light')} />
+        <ChoiceChip label="Yesterday" selected={value === addDays(today, -1)} onPress={haptics(() => onChange(addDays(today, -1)), 'light')} />
       </View>
  
       {/* iOS has no imperative picker, so show the inline calendar in a modal */}
@@ -426,8 +429,9 @@ export function DateField({
 /** A tappable list line with a chevron: used on Settings to open another screen. */
 export function LinkRow({ label, hint, onPress, value }: { label: string; hint?: string; onPress: () => void; value?: string }) {
   const { colors } = useTheme();
+  const haptics = useHaptics();
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" android_ripple={{ color: colors.outline }} style={styles.linkRow}>
+    <Pressable onPress={haptics(onPress, 'light')} accessibilityRole="button" android_ripple={{ color: colors.outline }} style={styles.linkRow}>
       <View style={styles.fill}>
         <Text style={[typography.titleSmall, { color: colors.textPrimary }]}>{label}</Text>
         {hint ? <Text style={[typography.bodySmall, { color: colors.textSecondary }]}>{hint}</Text> : null}

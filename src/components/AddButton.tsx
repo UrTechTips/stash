@@ -12,10 +12,11 @@ import { useFloatingBarSpace } from './FloatingTabBar';
  */
 export function AddButton({ onPress }: { onPress: () => void }) {
   const { colors } = useTheme();
+  const haptics = useHaptics();
   const barSpace = useFloatingBarSpace();
   return (
     <Pressable
-      onPress={useHaptics(onPress, 'medium')}
+      onPress={haptics(onPress, 'medium')}
       accessibilityRole="button"
       accessibilityLabel="Add transaction"
       style={[styles.fab, { bottom: barSpace + 16, backgroundColor: colors.heroAccent }]}

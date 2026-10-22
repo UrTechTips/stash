@@ -15,6 +15,7 @@ const TINTS = ['#2F7FD0', '#17A06A', '#E08A1E', '#6C4FD8', '#C03F2B', '#8A6D3B']
 
 export default function Accounts() {
   const router = useRouter();
+  const haptics = useHaptics();
   const { colors } = useTheme();
   const space = useFloatingBarSpace();
   const [showArchived, setShowArchived] = useState(false);
@@ -25,6 +26,7 @@ export default function Accounts() {
   const archived = all.filter((a) => a.archived);
   const { netWorth, liquid } = summarizeAccounts(all);
   const open = (id: string) => router.push({ pathname: '/account/[id]', params: { id } });
+
 
   const row = (a: (typeof all)[number], i: number) => {
     const t = ACCOUNT_TYPES.find((x) => x.value === a.type)!;
@@ -37,7 +39,7 @@ export default function Accounts() {
         spendable={a.isSpendable}
         emoji={t.emoji}
         tint={TINTS[i % TINTS.length]}
-        onPress={useHaptics(() => open(String(a.id)), "light")}
+        onPress={haptics(() => open(String(a.id)), "light")}
       />
     );
   };
@@ -59,14 +61,14 @@ export default function Accounts() {
         </View>
 
         {active.length === 0 ? (
-          <EmptyState title="No accounts yet" body="Add the places your money lives: bank, UPI, cash." actionLabel="Add account" onAction={useHaptics(() => open('new'), "medium")} />
+          <EmptyState title="No accounts yet" body="Add the places your money lives: bank, UPI, cash." actionLabel="Add account" onAction={haptics(() => open('new'), "medium")} />
         ) : (
           active.map(row)
         )}
 
         {archived.length > 0 ? (
           <>
-            <SectionHeader title={`Archived (${archived.length})`} actionLabel={showArchived ? 'Hide' : 'Show'} onAction={useHaptics(() => setShowArchived((s) => !s), "light")} />
+            <SectionHeader title={`Archived (${archived.length})`} actionLabel={showArchived ? 'Hide' : 'Show'} onAction={haptics(() => setShowArchived((s) => !s), "light")} />
             {showArchived ? archived.map(row) : null}
           </>
         ) : null}

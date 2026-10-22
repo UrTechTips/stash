@@ -348,6 +348,7 @@ const KEY_ROWS = [
 
 function Keypad({ onKey, onBackspace }: { onKey: (k: string) => void; onBackspace: () => void }) {
   const { colors } = useTheme();
+  const haptics = useHaptics();
   return (
     <View style={styles.keypad}>
       {KEY_ROWS.map((row, i) => (
@@ -355,7 +356,7 @@ function Keypad({ onKey, onBackspace }: { onKey: (k: string) => void; onBackspac
           {row.map((key) => (
             <Pressable
               key={key}
-              onPress={useHaptics(() => (key === 'back' ? onBackspace() : onKey(key)), 'light')}
+              onPress={haptics(() => (key === 'back' ? onBackspace() : onKey(key)), 'light')}
               accessibilityRole="button"
               accessibilityLabel={
                 key === 'back' ? 'Delete last digit' : key === '.' ? 'Decimal point' : key

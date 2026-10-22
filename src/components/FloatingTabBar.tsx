@@ -50,6 +50,7 @@ function useKeyboardVisible(): boolean {
 
 export function FloatingTabBar({ state, descriptors, navigation }: TabBarProps) {
   const { colors } = useTheme();
+  const haptics = useHaptics();
   const insets = useSafeAreaInsets();
   const keyboardVisible = useKeyboardVisible();
 
@@ -90,8 +91,8 @@ export function FloatingTabBar({ state, descriptors, navigation }: TabBarProps) 
           return (
             <Pressable
               key={route.key}
-              onPress={useHaptics(onPress, 'medium')}
-              onLongPress={useHaptics(onLongPress, 'light')}
+              onPress={haptics(onPress, 'medium')}
+              onLongPress={haptics(onLongPress, 'light')}
               accessibilityRole="tab"
               accessibilityState={{ selected: focused }}
               accessibilityLabel={options.tabBarAccessibilityLabel ?? label}
