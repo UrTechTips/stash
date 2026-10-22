@@ -2,7 +2,7 @@
   "expo": {
     "name": "Stash",
     "slug": "stash",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "stash",
@@ -13,7 +13,7 @@
     },
     "android": {
       "package": "me.sreenadh.stash",
-      "versionCode": 15,
+      "versionCode": 16,
       "adaptiveIcon": {
         "backgroundColor": "#0A3A2E",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

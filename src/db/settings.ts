@@ -1,6 +1,5 @@
 import { DEFAULT_TIERS } from '../engine/defaults';
-import type { EngineSettings, Tier } from '../engine/types';
-import type { AllowanceMode } from '../engine/types';
+import type { AllowanceMode, EngineSettings, Tier } from '../engine/types';
 import type { Db } from './Db';
 import type { Minor } from './types';
 
@@ -13,7 +12,6 @@ export interface AppSettings {
   bufferMonths: number;
   tiers: Tier[];
   needMultiple: number;
-  /** Hourly earnings in minor units; 0 hides the work-hours figure. */
   hourlyEarnings: Minor;
 
   // Daily allowance
@@ -32,6 +30,7 @@ export interface AppSettings {
   backupReminder: boolean;
   automaticUpdates: boolean;
   onboarded: boolean;
+  hideTotalBalance: boolean;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -52,9 +51,9 @@ export const DEFAULT_SETTINGS: AppSettings = {
   backupReminder: false,
   automaticUpdates: true,
   onboarded: false,
+  hideTotalBalance: false,
 };
 
-// Infinity cannot be written as JSON, so the last tier is stored with a very large number.
 const BIG = 1e9;
 const encodeTiers = (tiers: Tier[]) => tiers.map((t) => ({ ...t, maxPercent: Number.isFinite(t.maxPercent) ? t.maxPercent : BIG }));
 const decodeTiers = (tiers: Tier[]) => tiers.map((t) => ({ ...t, maxPercent: t.maxPercent >= BIG ? Infinity : t.maxPercent }));
@@ -67,7 +66,7 @@ export async function loadSettings(db: Db): Promise<AppSettings> {
     try {
       out[key] = JSON.parse(value);
     } catch {
-      // ignore a corrupt value and keep the default
+      // Ignore a corrupt value and keep the default
     }
   }
   const settings = out as unknown as AppSettings;

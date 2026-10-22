@@ -1,37 +1,22 @@
-/**
- * Money is always an integer count of minor units (paise / cents).
- * Never store or add rupees as floats: 0.1 + 0.2 !== 0.3 in JavaScript.
- *
- * Pure TypeScript on purpose: no React Native imports, so it runs in plain Vitest
- * and can move into the engine package later.
- */
 export type Minor = number;
 
 export type CurrencyFormat = {
   symbol: string;
-  /** 12,34,567 (lakh/crore) when true, 1,234,567 when false. */
   indianGrouping: boolean;
-  /** 2 for paise/cents. */
   minorDigits: number;
 };
 
 export const INR: CurrencyFormat = { symbol: '₹', indianGrouping: true, minorDigits: 2 };
 
-// The app-wide default currency (changed from Settings). Pure code can still pass its own format.
 let currentCurrency: CurrencyFormat = INR;
 export const getCurrency = (): CurrencyFormat => currentCurrency;
 export const setCurrency = (format: CurrencyFormat): void => {
   currentCurrency = format;
 };
 
-/**
- * 'auto'   show decimals only when they are not zero: ₹1,240 but ₹1,240.50
- * 'always' always show them
- * 'never'  truncate toward zero, so a "safe to spend" figure never overstates
- */
 export type DecimalMode = 'auto' | 'always' | 'never';
 
-const MINUS = '\u2212'; // a real minus sign, not a hyphen
+const MINUS = '\u2212';
 
 export function formatMoney(
   minor: Minor,

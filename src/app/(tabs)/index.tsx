@@ -1,4 +1,6 @@
+import { loadSettings } from '@/db/settings';
 import { useHaptics } from '@/hooks/useHaptics';
+import { getCurrency } from '@/lib/money';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
@@ -39,6 +41,8 @@ export default function Home() {
     return { ctx, goal, recent };
   });
 
+  const { data: s } = useQuery((db) => loadSettings(db));
+
   if (!data) return <Screen><View /></Screen>;
   const { ctx, goal, recent } = data;
   const a = ctx.allowance;
@@ -72,10 +76,17 @@ export default function Home() {
           </Card>
         )}
 
-        <View style={styles.moneyRow}>
-          <MoneyStat label="Liquid money" minor={ctx.liquid} />
-          <MoneyStat label="Net worth" minor={ctx.netWorth} />
-        </View>
+        {s?.hideTotalBalance ? (
+          <View style={styles.moneyRow}>
+            <MoneyStat label="Liquid money" minor={ctx.liquid} hidden />
+            <MoneyStat label="Net worth" minor={ctx.netWorth} hidden />
+          </View>
+        ) : (
+          <View style={styles.moneyRow}>
+            <MoneyStat label="Liquid money" minor={ctx.liquid} />
+            <MoneyStat label="Net worth" minor={ctx.netWorth} />
+          </View>
+        )}
 
         {ctx.upcomingBills.length > 0 ? (
           <>
@@ -139,12 +150,12 @@ export default function Home() {
   );
 }
 
-function MoneyStat({ label, minor }: { label: string; minor: number }) {
+function MoneyStat({ label, minor, hidden = false }: { label: string; minor: number, hidden?: boolean }) {
   const { colors } = useTheme();
   return (
     <View style={styles.stat}>
       <Text style={[typography.bodySmall, { color: colors.textSecondary }]}>{label}</Text>
-      <AmountText minor={minor} style={typography.amountLarge} />
+      <AmountText minor={minor} format={getCurrency()} style={typography.amountLarge} hidden={hidden} />
     </View>
   );
 }

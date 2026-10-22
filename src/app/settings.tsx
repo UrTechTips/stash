@@ -234,7 +234,8 @@ export default function Settings() {
         </Card>
 
         <Card>
-          <Text style={[typography.title, { color: colors.textPrimary }]}>Your data</Text>
+          <Text style={[typography.title, { color: colors.textPrimary }]}>Privacy & Data</Text>
+          <ToggleRow label="Hide total balance" hint="Hide the total balance of your accounts in home screen." value={s.hideTotalBalance} onValueChange={(v) => save({ hideTotalBalance: v })} />
           <LinkRow label="Bills and income" hint="Rent, subscriptions, salary" onPress={() => router.push('/recurring')} />
           <LinkRow label="Categories" hint="Essential, discretionary, income" onPress={() => router.push('/categories')} />
           <Text style={[typography.bodySmall, { color: colors.textSecondary }]}>

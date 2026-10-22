@@ -1,4 +1,3 @@
-import React from 'react';
 import { Text, type StyleProp, type TextStyle } from 'react-native';
 import { formatMoney, type CurrencyFormat, type DecimalMode, type Minor } from '../lib/money';
 import { useTheme } from '../theme/ThemeProvider';
@@ -14,14 +13,10 @@ type Props = {
   format?: CurrencyFormat;
   /** Overrides the color that `kind` would pick. */
   color?: string;
+  hidden?: boolean;
 };
 
-/**
- * One place that knows how money looks.
- * Expenses stay in normal ink (not red); only income gets a color.
- * Pass a positive magnitude; `kind` decides how it is drawn.
- */
-export function AmountText({ minor, kind = 'neutral', style, decimals, format, color }: Props) {
+export function AmountText({ minor, kind = 'neutral', style, decimals, format, color, hidden = false }: Props) {
   const { colors } = useTheme();
   const resolved =
     color ??
@@ -30,11 +25,11 @@ export function AmountText({ minor, kind = 'neutral', style, decimals, format, c
       : kind === 'transfer'
         ? colors.textSecondary
         : colors.textPrimary);
-  // Income shows a "+", expenses show nothing: the row already says what it is.
   const text = formatMoney(minor, { decimals, format, signed: kind === 'income' });
+  const hiddenText = `${format?.symbol}*,***`;
   return (
     <Text numberOfLines={1} style={[typography.amountRow, { color: resolved }, style]}>
-      {text}
+      {hidden ? hiddenText : text}
     </Text>
   );
 }
