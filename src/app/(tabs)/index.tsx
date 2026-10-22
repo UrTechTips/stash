@@ -1,6 +1,5 @@
 import { loadSettings } from '@/db/settings';
 import { useHaptics } from '@/hooks/useHaptics';
-import { getCurrency } from '@/lib/money';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
@@ -64,7 +63,9 @@ export default function Home() {
             allowanceToday={a.allowance}
             daysLeft={a.daysLeft}
             overBudgetBy={a.overBudgetBy}
+            context={ctx}
             style={styles.hero}
+            hidden={s?.hideTotalBalance}
           />
         ) : (
           <Card style={styles.hero}>
@@ -74,18 +75,6 @@ export default function Home() {
             </Text>
             <Button label="Set budget" onPress={() => router.push('/budget')} />
           </Card>
-        )}
-
-        {s?.hideTotalBalance ? (
-          <View style={styles.moneyRow}>
-            <MoneyStat label="Liquid money" minor={ctx.liquid} hidden />
-            <MoneyStat label="Net worth" minor={ctx.netWorth} hidden />
-          </View>
-        ) : (
-          <View style={styles.moneyRow}>
-            <MoneyStat label="Liquid money" minor={ctx.liquid} />
-            <MoneyStat label="Net worth" minor={ctx.netWorth} />
-          </View>
         )}
 
         {ctx.upcomingBills.length > 0 ? (
@@ -147,16 +136,6 @@ export default function Home() {
         ) : null}
       </ScrollView>
     </Screen>
-  );
-}
-
-function MoneyStat({ label, minor, hidden = false }: { label: string; minor: number, hidden?: boolean }) {
-  const { colors } = useTheme();
-  return (
-    <View style={styles.stat}>
-      <Text style={[typography.bodySmall, { color: colors.textSecondary }]}>{label}</Text>
-      <AmountText minor={minor} format={getCurrency()} style={typography.amountLarge} hidden={hidden} />
-    </View>
   );
 }
 
