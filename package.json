@@ -8,6 +8,7 @@
     "@expo/ui": "~57.0.25",
     "@expo/vector-icons": "^15.0.2",
     "@react-native-community/datetimepicker": "9.1.0",
+    "@variant-systems/expo-dynamic-app-icon": "^1.0.2",
     "expo": "~57.0.30",
     "expo-asset": "~57.0.19",
     "expo-build-properties": "~57.0.22",

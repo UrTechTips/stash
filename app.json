@@ -2,7 +2,7 @@
   "expo": {
     "name": "Stash",
     "slug": "stash",
-    "version": "1.1.5",
+    "version": "1.1.6",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "stash",
@@ -13,7 +13,7 @@
     },
     "android": {
       "package": "me.sreenadh.stash",
-      "versionCode": 16,
+      "versionCode": 18,
       "adaptiveIcon": {
         "backgroundColor": "#0A3A2E",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -66,10 +66,28 @@
           }
         }
       ],
+      [
+        "@variant-systems/expo-dynamic-app-icon",
+        {
+          "default": {
+            "image": "./assets/images/icon.png"
+          },
+          "tokyo-night": {
+            "image": "./assets/images/icon-tokyo-night.png"
+          },
+          "dracula": {
+            "image": "./assets/images/icon-dracula.png"
+          },
+          "nord": {
+            "image": "./assets/images/icon-nord.png"
+          }
+        }
+      ],
       "./plugins/withSplitApks.js",
       "./plugins/withReleaseSigning.js",
       "./plugins/withNameConvention.js",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "@variant-systems/expo-dynamic-app-icon"
     ],
     "experiments": {
       "typedRoutes": false,
