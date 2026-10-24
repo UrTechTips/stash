@@ -24,7 +24,7 @@ import { listTransactions } from '../../db/transactions';
 import { dayLabel, monthLabel } from '../../engine/dates';
 import { loadContext } from '../../services/context';
 import { evaluateAll, topGoal } from '../../services/goals';
-import { checksToUi, headlineFor } from '../../services/ui';
+import { headlineFor } from '../../services/ui';
 import { useTheme } from '../../theme/ThemeProvider';
 import { typography } from '../../theme/typography';
 
@@ -110,7 +110,6 @@ export default function Home() {
               savedMinor={goal.goal.saved}
               status={goal.verdict.status}
               headline={headlineFor(goal.verdict, ctx.today)}
-              checks={checksToUi(goal.verdict.checks)}
               onPress={() => router.push({ pathname: '/goal/[id]', params: { id: String(goal.goal.id) } })}
             />
           </View>
