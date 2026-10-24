@@ -1,3 +1,4 @@
+import { useHaptics } from '@/hooks/useHaptics';
 import { AppUpdate, checkForUpdate, downloadAndInstallUpdate } from '@/services/updater';
 import * as Application from 'expo-application';
 import Constants from 'expo-constants';
@@ -43,6 +44,7 @@ export default function Settings() {
   const { db, today } = useApp();
   const { colors } = useTheme();
   const run = useAction();
+  const haptics = useHaptics();
   const { data: s } = useQuery((d) => loadSettings(d));
 
   const [income, setIncome] = useState('');
@@ -139,6 +141,12 @@ export default function Settings() {
     }
   }
 
+  const handlePaletteChange = (palette: AppSettings['palette']) => {
+    // TODO: Tried to change app icon but it is too buggy on android (will visit later.)
+    // ExpoDynamicAppIcon.setAppIcon(palette === "default" ? "original" : palette === 'tokyo-night' ? "tokyoNight" : palette);
+    save({ palette });
+  }
+
   return (
     <Screen>
       <ScreenHeader title="Settings" />
@@ -219,13 +227,13 @@ export default function Settings() {
           <OptionChips
             options={THEMES as { value: AppSettings['theme']; label: string }[]}
             value={s.theme}
-            onChange={(theme) => save({ theme })}
+            onChange={haptics((theme) => save({ theme }), "light")}
           />
           <Text style={[typography.titleSmall, { color: colors.textSecondary }]}>Palette</Text>
           <OptionChips
             options={COLOR_PALETTES as { value: AppSettings['palette']; label: string }[]}
             value={s.palette}
-            onChange={(palette) => save({ palette })}
+            onChange={haptics(handlePaletteChange, "light")}
           />
         </Card>
 
