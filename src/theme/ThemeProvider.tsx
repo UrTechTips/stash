@@ -1,28 +1,34 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
-import { darkPalette, lightPalette, type Palette } from './colors';
+import { defaultDarkPalette, defaultLightPalette, draculaDark, draculaLight, nordDark, nordLight, tokyoNightDark, tokyoNightLight, type Palette } from './colors';
 
-type Scheme = 'light' | 'dark' | 'system';
+type Scheme = "light" | "dark" | "system";
+type PaletteName = "default" | "dracula" | "nord" | "tokyo-night";
 
 type Theme = { colors: Palette; isDark: boolean };
 
-const ThemeContext = createContext<Theme>({ colors: lightPalette, isDark: false });
+const ThemeContext = createContext<Theme>({ colors: defaultLightPalette, isDark: false });
 
-/**
- * Wrap the app in this once (see app/_layout.tsx).
- * Follows the phone's light/dark setting unless you pass scheme="light" or "dark".
- */
+const VALID_PALETTES: Record<PaletteName, Record<'dark' | 'light', Palette>> = {
+  default: { dark: defaultDarkPalette, light: defaultLightPalette },
+  dracula: { dark: draculaDark, light: draculaLight },
+  nord: { dark: nordDark, light: nordLight },
+  'tokyo-night': { dark: tokyoNightDark, light: tokyoNightLight },
+}
+
 export function ThemeProvider({
   scheme = 'system',
+  palette = 'default',
   children,
 }: {
   scheme?: Scheme;
+  palette?: PaletteName;
   children: React.ReactNode;
 }) {
   const system = useColorScheme();
   const isDark = scheme === 'system' ? system === 'dark' : scheme === 'dark';
   const value = useMemo<Theme>(
-    () => ({ colors: isDark ? darkPalette : lightPalette, isDark }),
+    () => ({ colors: isDark ? VALID_PALETTES[palette].dark : VALID_PALETTES[palette].light, isDark }),
     [isDark],
   );
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

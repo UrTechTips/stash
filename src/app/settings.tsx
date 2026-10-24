@@ -24,6 +24,20 @@ const CURRENCIES = [
   { value: '£', label: '£ Pound' },
 ];
 
+const THEMES = [
+  { value: 'system', label: 'Match Phone'},
+  { value: 'light', label: 'Light'},
+  { value: 'dark', label: 'Dark'}
+]
+
+const COLOR_PALETTES = [
+  { value: 'default', label: 'Default'},
+  // { value: 'amoled', label: 'AMOLED'},
+  { value: 'dracula', label: 'Dracula'},
+  { value: 'nord', label: 'Nord'},
+  { value: 'tokyo-night', label: 'Tokyo Night'},
+]
+
 export default function Settings() {
   const router = useRouter();
   const { db, today } = useApp();
@@ -201,12 +215,23 @@ export default function Settings() {
         </Card>
 
         <Card>
-          <Text style={[typography.title, { color: colors.textPrimary }]}>Appearance and security</Text>
+          <Text style={[typography.title, { color: colors.textPrimary }]}>Appearance</Text>
           <OptionChips
-            options={[{ value: 'system', label: 'Match phone' }, { value: 'light', label: 'Light' }, { value: 'dark', label: 'Dark' }] as { value: AppSettings['theme']; label: string }[]}
+            options={THEMES as { value: AppSettings['theme']; label: string }[]}
             value={s.theme}
             onChange={(theme) => save({ theme })}
           />
+          <Text style={[typography.titleSmall, { color: colors.textSecondary }]}>Palette</Text>
+          <OptionChips
+            options={COLOR_PALETTES as { value: AppSettings['palette']; label: string }[]}
+            value={s.palette}
+            onChange={(palette) => save({ palette })}
+          />
+        </Card>
+
+        <Card>
+          <Text style={[typography.title, { color: colors.textPrimary }]}>Privacy and Security</Text>
+          <ToggleRow label="Hide total balance" hint="Hide the total balance of your accounts in home screen." value={s.hideTotalBalance} onValueChange={(v) => save({ hideTotalBalance: v })} />
           <ToggleRow label="App lock" hint="Ask for your fingerprint, face or phone PIN when you open Stash." value={s.appLock} onValueChange={toggleLock} />
         </Card>
 
@@ -234,8 +259,7 @@ export default function Settings() {
         </Card>
 
         <Card>
-          <Text style={[typography.title, { color: colors.textPrimary }]}>Privacy & Data</Text>
-          <ToggleRow label="Hide total balance" hint="Hide the total balance of your accounts in home screen." value={s.hideTotalBalance} onValueChange={(v) => save({ hideTotalBalance: v })} />
+          <Text style={[typography.title, { color: colors.textPrimary }]}>Data</Text>
           <LinkRow label="Bills and income" hint="Rent, subscriptions, salary" onPress={() => router.push('/recurring')} />
           <LinkRow label="Categories" hint="Essential, discretionary, income" onPress={() => router.push('/categories')} />
           <Text style={[typography.bodySmall, { color: colors.textSecondary }]}>

@@ -24,6 +24,7 @@ export interface AppSettings {
 
   // App
   theme: 'system' | 'light' | 'dark';
+  palette: 'default' | 'dracula' | 'nord' | 'tokyo-night';
   appLock: boolean;
   billReminders: boolean;
   goalReminders: boolean;
@@ -45,6 +46,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   essentialsEstimate: 0,
   savingRateEstimate: 0,
   theme: 'system',
+  palette: 'default',
   appLock: false,
   billReminders: false,
   goalReminders: false,

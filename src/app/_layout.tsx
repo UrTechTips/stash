@@ -96,7 +96,7 @@ function ThemedApp() {
   if (!settings) return null;
 
   return (
-    <ThemeProvider scheme={settings.theme}>
+    <ThemeProvider scheme={settings.theme} palette={settings.palette}>
       <LockGate enabled={settings.appLock}>
         <Shell />
       </LockGate>
