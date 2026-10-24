@@ -35,7 +35,6 @@ const dateToIso = (dt: Date): ISODate =>
   `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}` as ISODate;
 
 
-/** Top bar for pushed screens: a back arrow, the title, and an optional action on the right. */
 export function ScreenHeader({ title, right, onBack }: { title: string; right?: React.ReactNode; onBack?: () => void }) {
   const { colors } = useTheme();
   const router = useRouter();
@@ -58,7 +57,6 @@ export function ScreenHeader({ title, right, onBack }: { title: string; right?: 
   );
 }
 
-/** A pushed form screen: header, scrolling body that makes room for the keyboard, and a pinned footer for the main button. */
 export function FormScreen({
   title,
   children,
@@ -125,7 +123,6 @@ export function TextField({
   );
 }
 
-/** Keeps only digits and one decimal point with at most two decimals: "12.345" -> "12.34". */
 export function sanitizeAmount(text: string): string {
   const cleaned = text.replace(/[^\d.]/g, '');
   const [whole, ...rest] = cleaned.split('.');
@@ -133,7 +130,6 @@ export function sanitizeAmount(text: string): string {
   return `${whole.slice(0, 9)}.${rest.join('').slice(0, 2)}`;
 }
 
-/** An amount in rupees (or the chosen currency). Holds text; turn it into minor units with parseToMinor. */
 export function MoneyField({
   label,
   value,
@@ -168,7 +164,6 @@ export function MoneyField({
   );
 }
 
-/** Single choice from a short list, shown as chips. */
 export function OptionChips<T extends string | number>({
   label,
   options,
@@ -272,7 +267,6 @@ export function Button({
   );
 }
 
-/** A grouped block on a page: a soft surface with a border, used for settings groups and summaries. */
 export function Card({ children, style }: { children: React.ReactNode; style?: ViewStyle }) {
   const { colors } = useTheme();
   return (
@@ -280,7 +274,6 @@ export function Card({ children, style }: { children: React.ReactNode; style?: V
   );
 }
 
-/** A number with minus and plus buttons: for months, percentages and "what if" amounts. */
 export function Stepper({
   label,
   value,
@@ -426,7 +419,6 @@ export function DateField({
   );
 }
 
-/** A tappable list line with a chevron: used on Settings to open another screen. */
 export function LinkRow({ label, hint, onPress, value }: { label: string; hint?: string; onPress: () => void; value?: string }) {
   const { colors } = useTheme();
   const haptics = useHaptics();
@@ -454,14 +446,14 @@ const styles = StyleSheet.create({
   moneyWrap: { minHeight: 52, borderWidth: 1, borderRadius: radius.key, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', gap: 8 },
   moneyInput: { flex: 1, fontSize: 20, paddingVertical: 8 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  toggleRow: { minHeight: MIN_TOUCH, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  toggleRow: { minHeight: MIN_TOUCH, flexDirection: 'row', alignItems: 'center', gap: 8 },
   button: { minHeight: 52, borderRadius: radius.key, borderWidth: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 },
   card: { borderWidth: 1, borderRadius: radius.goal, padding: 16, gap: 14 },
-  stepper: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  stepper: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   stepButton: { width: MIN_TOUCH, height: MIN_TOUCH, borderRadius: MIN_TOUCH / 2, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   stepValue: { flex: 1, textAlign: 'center' },
   linkRow: { minHeight: 56, flexDirection: 'row', alignItems: 'center', gap: 8 },
-  dateTap: { flex: 1, minHeight: MIN_TOUCH, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
+  dateTap: { flex: 1, minHeight: MIN_TOUCH, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 },
   pickerBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center', padding: 24 },
   pickerSheet: { borderWidth: 1, borderRadius: radius.goal, padding: 12 },
 });

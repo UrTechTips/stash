@@ -100,7 +100,7 @@ export default function Home() {
           </>
         ) : null}
 
-        <SectionHeader title="Next purchase" actionLabel="All goals" onAction={() => router.push('/goals')} />
+        <SectionHeader title="Next purchase" actionLabel="All goals" onAction={haptics(() => router.push('/goals'), "light")} />
         {goal ? (
           <View style={styles.pad}>
             <GoalCard

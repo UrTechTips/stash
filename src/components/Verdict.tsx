@@ -69,12 +69,7 @@ export function CheckRow({ check }: { check: VerdictCheck }) {
   );
 }
 
-/**
- * Wishlist goal card.
- *
- * Structure carries the information: the colored left edge is the verdict, the ring is
- * how much is set aside, and the checklist underneath is why.
- */
+
 export function GoalCard({
   name,
   emoji,
@@ -91,9 +86,7 @@ export function GoalCard({
   priceMinor: Minor;
   savedMinor: Minor;
   status: VerdictStatus;
-  /** The one-line takeaway, e.g. "Keep saving · about 26 days to go". */
   headline: string;
-  /** The reasons. Leave empty to collapse the card to its summary. */
   checks?: VerdictCheck[];
   onPress?: () => void;
   style?: ViewStyle;
