@@ -2,6 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Android](https://img.shields.io/badge/Platform-Android-3DDC84?logo=android&logoColor=white)](#)
+[![Release](https://img.shields.io/github/v/release/UrTechTips/stash)](https://github.com/UrTechTips/stash/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/UrTechTips/stash/latest/total?label=Downloads)](#)
+
 
 Stash is a privacy-first personal money manager for Android. It answers two practical questions: *how much can I safely spend today?* and *is this purchase safe right now?*
 
