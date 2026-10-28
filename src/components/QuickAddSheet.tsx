@@ -51,13 +51,6 @@ export type QuickAddResult = {
   note: string;
 };
 
-/**
- * The quick-add sheet. Goal: add an expense in under five seconds, one-handed.
- * Amount and keypad do the work; category and account are one tap each; the note is optional.
- *
- * You own visibility: keep a `visible` flag in state, set it true from the Add button, and
- * set it false in both onClose and onSave. The form resets every time it opens.
- */
 export function QuickAddSheet({
   visible,
   categories,

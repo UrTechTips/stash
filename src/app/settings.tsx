@@ -8,6 +8,7 @@ import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { confirm, useAction } from '../app-state/actions';
 import { useApp, useQuery } from '../app-state/AppProvider';
 import { Button, Card, LinkRow, MoneyField, OptionChips, Screen, ScreenHeader, Stepper, ToggleRow } from '../components';
+import { ReportIssueResult, ReportIssueSheet } from '../components/ReportIssue';
 import { DEFAULT_SETTINGS, loadSettings, saveSettings, type AppSettings } from '../db/settings';
 import type { Tier } from '../engine/types';
 import { minorToInput, parseToMinor, setCurrency } from '../lib/money';
@@ -17,6 +18,7 @@ import { exportData, importData, transactionsCsv } from '../services/backup';
 import { boot } from '../services/bootstrap';
 import { useTheme } from '../theme/ThemeProvider';
 import { typography } from '../theme/typography';
+
 
 const CURRENCIES = [
   { value: '₹', label: '₹ Rupee' },
@@ -47,6 +49,7 @@ export default function Settings() {
   const haptics = useHaptics();
   const { data: s } = useQuery((d) => loadSettings(d));
 
+  const [issueSheetVisible, setIssueSheetVisible] = useState(true);
   const [income, setIncome] = useState('');
   const [essentials, setEssentials] = useState('');
   const [saving, setSaving] = useState('');
@@ -139,6 +142,11 @@ export default function Settings() {
     } catch (error) {
       console.error('Error updating app:', error);
     }
+  }
+
+  const handleReportIssue = (issue: ReportIssueResult) => {
+    // TODO: Implement issue reporting logic
+    console.log('Report Issue:', issue);
   }
 
   const handlePaletteChange = (palette: AppSettings['palette']) => {
@@ -276,12 +284,14 @@ export default function Settings() {
           <Button label="Export backup (JSON)" kind="secondary" onPress={exportJson} />
           <Button label="Export transactions (CSV)" kind="secondary" onPress={exportCsv} />
           <Button label="Restore from backup" kind="secondary" onPress={importJson} />
+          <Button label="Report Issue" kind="secondary" onPress={() => setIssueSheetVisible(true)} />
         </Card>
 
         <Text style={[typography.bodySmall, styles.version, { color: colors.textSecondary }]}>
           Stash {Constants.expoConfig?.version ?? ''}
         </Text>
       </ScrollView>
+      <ReportIssueSheet visible={issueSheetVisible} today={new Date().toISOString().split('T')[0]} onClose={() => setIssueSheetVisible(false)} onSave={handleReportIssue} />
     </Screen>
   );
 }

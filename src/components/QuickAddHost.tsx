@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { useAction } from '../app-state/actions';
 import { useApp, useQuery } from '../app-state/AppProvider';
@@ -12,7 +12,6 @@ import { formatMoney } from '../lib/money';
 import { AddButton } from './AddButton';
 import { QuickAddSheet, type QuickAddResult } from './QuickAddSheet';
 
-/** One quick-add sheet and Add button for every tab. Other screens can open it with openQuickAdd(). */
 export function QuickAddHost() {
   const { db, today } = useApp();
   const run = useAction();

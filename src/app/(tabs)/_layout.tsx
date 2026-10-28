@@ -6,10 +6,6 @@ import { QuickAddHost } from '../../components/QuickAddHost';
 
 type IconName = React.ComponentProps<typeof Ionicons>['name'];
 
-/**
- * The five main destinations. Insights and Settings live behind icons on the Home screen,
- * so the bar stays at five or fewer.
- */
 const TABS: { name: string; title: string; icon: IconName }[] = [
   { name: 'index', title: 'Home', icon: 'home' },
   { name: 'activity', title: 'Activity', icon: 'swap-vertical' },

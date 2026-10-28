@@ -66,23 +66,6 @@
           }
         }
       ],
-      // [
-      //   "@variant-systems/expo-dynamic-app-icon",
-      //   {
-      //     "original": {
-      //       "image": "./assets/images/icon.png"
-      //     },
-      //     "tokyoNight": {
-      //       "image": "./assets/images/icon-tokyo-night.png"
-      //     },
-      //     "dracula": {
-      //       "image": "./assets/images/icon-dracula.png"
-      //     },
-      //     "nord": {
-      //       "image": "./assets/images/icon-nord.png"
-      //     }
-      //   }
-      // ],
       "./plugins/withSplitApks.js",
       "./plugins/withReleaseSigning.js",
       "./plugins/withNameConvention.js",

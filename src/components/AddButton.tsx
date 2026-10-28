@@ -6,10 +6,6 @@ import { useTheme } from '../theme/ThemeProvider';
 import { typography } from '../theme/typography';
 import { useFloatingBarSpace } from './FloatingTabBar';
 
-/**
- * The one-tap entry point for quick-add. Floats bottom-right above the tab bar.
- * Render it inside a screen's root View (not inside a ScrollView).
- */
 export function AddButton({ onPress }: { onPress: () => void }) {
   const { colors } = useTheme();
   const haptics = useHaptics();
