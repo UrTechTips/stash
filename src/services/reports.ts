@@ -1,6 +1,6 @@
-import type { ISODate } from '../engine/dates';
 import type { Db } from '../db/Db';
 import type { CategoryKind, Minor } from '../db/types';
+import type { ISODate } from '../engine/dates';
 
 /** All the read-only aggregate queries. Money is always integer minor units. */
 

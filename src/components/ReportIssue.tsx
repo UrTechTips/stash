@@ -13,7 +13,11 @@ export type ReportIssueResult = {
     title: string;
     description: string;
     author: string;
-    meta: Record<string, string>;
+    meta: {
+        device: string;
+        appVersion: string;
+        osVersion: string;
+    }
 }
 
 export function ReportIssueSheet({
@@ -64,6 +68,7 @@ export function ReportIssueSheet({
 function ReportIssueForm({ today, onSave }: { today: ISODate; onSave: (result: ReportIssueResult) => void}) {
     const { colors } = useTheme();
     const haptics = useHaptics();
+    const [author, setAuthor] = useState('');
     const [title, setTitle] = useState('[BUG] ');
     const [description, setDescription] = useState('');
     const canSave = title.trim().length > 0 && description.trim().length > 0;    
@@ -81,7 +86,7 @@ function ReportIssueForm({ today, onSave }: { today: ISODate; onSave: (result: R
         onSave({
             title: title,
             description: description,
-            author: "User",
+            author: author,
             meta: meta
         });
     }
@@ -92,11 +97,23 @@ function ReportIssueForm({ today, onSave }: { today: ISODate; onSave: (result: R
             showsVerticalScrollIndicator={false}
             bounces={false}
         >
+            <FieldLabel text="Author" />
+            <TextInput
+                value={author}
+                onChangeText={setAuthor}
+                placeholder="Anonymous User"
+                placeholderTextColor={colors.textSecondary}
+                returnKeyType="done"
+                style={[
+                    styles.title,
+                    { color: colors.textPrimary, borderColor: colors.outline, fontFamily: fonts.body },
+                ]}
+            />
             <FieldLabel text="Title" />
             <TextInput
                 value={title}
                 onChangeText={setTitle}
-                placeholder="Add a note"
+                placeholder="Bug Title"
                 placeholderTextColor={colors.textSecondary}
                 returnKeyType="done"
                 style={[

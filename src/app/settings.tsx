@@ -19,7 +19,6 @@ import { boot } from '../services/bootstrap';
 import { useTheme } from '../theme/ThemeProvider';
 import { typography } from '../theme/typography';
 
-
 const CURRENCIES = [
   { value: '₹', label: '₹ Rupee' },
   { value: '$', label: '$ Dollar' },
@@ -49,7 +48,7 @@ export default function Settings() {
   const haptics = useHaptics();
   const { data: s } = useQuery((d) => loadSettings(d));
 
-  const [issueSheetVisible, setIssueSheetVisible] = useState(true);
+  const [issueSheetVisible, setIssueSheetVisible] = useState(false);
   const [income, setIncome] = useState('');
   const [essentials, setEssentials] = useState('');
   const [saving, setSaving] = useState('');
@@ -144,9 +143,53 @@ export default function Settings() {
     }
   }
 
-  const handleReportIssue = (issue: ReportIssueResult) => {
-    // TODO: Implement issue reporting logic
-    console.log('Report Issue:', issue);
+  const handleReportIssue = async (issue: ReportIssueResult) => {
+    const url = process.env.EXPO_PUBLIC_PROXY_URL + "github-issue";
+
+    if (!issue.title.startsWith("[BUG]")) {
+      issue.title = "[BUG] " + issue.title;
+    }
+
+    const description = `${issue.description}
+    
+**Device Environment:**
+ - Device Model: ${issue.meta.device}
+ - Android OS Version: ${issue.meta.osVersion}
+ - Stash App Version: ${issue.meta.appVersion}
+
+*Reported via Stash Mobile App*
+ - Reported By: ${issue.author}
+`
+
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-app-identifier': 'stash-mobile-v1'
+        },
+        body: JSON.stringify({
+          title: issue.title,
+          body: description
+        })
+      })
+
+      const data = await res.json();
+      console.log('Report issue response:', data);
+      if (res.ok) {
+        haptics(() => {}, "success");
+        Alert.alert('Issue reported', 'Thank you for reporting the issue. We will look into it.');
+      } else {
+        haptics(() => {}, "error");
+        Alert.alert('Error reporting issue', `There was an error reporting the issue: ${data.message || 'Unknown error'}`);
+      }
+    } catch (error) {
+      haptics(() => {}, "error");
+      console.error('Error reporting issue:', error);
+      Alert.alert('Error reporting issue', 'There was an error reporting the issue. Please try again later.');
+    } finally {
+      setIssueSheetVisible(false);
+    }
   }
 
   const handlePaletteChange = (palette: AppSettings['palette']) => {
