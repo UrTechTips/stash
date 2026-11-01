@@ -14,17 +14,14 @@ export async function budgetedSpend(db: Db, from: ISODate, to: ISODate): Promise
   return row?.n ?? 0;
 }
 
-/**
- * The split the daily allowance needs. Bills that fell due today (they came from a recurring rule)
- * count as already paid at the start of the day, so a rent payment does not wreck today's number.
- */
+// TODO: Add if needed: if they save money then it wont be on budget if else it would
 export async function spendSplit(db: Db, monthStart: ISODate, today: ISODate): Promise<{ before: Minor; today: Minor }> {
   const row = await db.first<{ before: number; today: number }>(
     `SELECT
        COALESCE(SUM(CASE WHEN date < ? OR recurring_id IS NOT NULL THEN amount ELSE 0 END), 0) AS before,
        COALESCE(SUM(CASE WHEN date = ? AND recurring_id IS NULL THEN amount ELSE 0 END), 0) AS today
        FROM transactions
-      WHERE type = 'expense' AND goal_id IS NULL AND date >= ? AND date <= ?`,
+      WHERE type = 'expense' AND date >= ? AND date <= ?`,
     [today, today, monthStart, today],
   );
   return { before: row?.before ?? 0, today: row?.today ?? 0 };
