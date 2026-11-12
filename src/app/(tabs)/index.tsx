@@ -10,14 +10,13 @@ import {
   BudgetRow,
   CategoryBadge,
   DayHeader,
-  EmptyState,
   GoalCard,
   SafeToSpendHero,
   Screen,
   SectionHeader,
   TransactionRow,
   txRowProps,
-  useFloatingBarSpace,
+  useFloatingBarSpace
 } from '../../components';
 import { Button, Card } from '../../components/forms';
 import { listTransactions } from '../../db/transactions';
@@ -113,14 +112,7 @@ export default function Home() {
               onPress={() => router.push({ pathname: '/goal/[id]', params: { id: String(goal.goal.id) } })}
             />
           </View>
-        ) : (
-          <EmptyState
-            title="Nothing on your wishlist"
-            body="Add something you want to buy. Stash tells you when it is safe."
-            actionLabel="Add a goal"
-            onAction={() => router.push('/goal/edit')}
-          />
-        )}
+        ) : null}
 
         {recent.length > 0 ? (
           <>
