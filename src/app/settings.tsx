@@ -1,10 +1,11 @@
 import { useHaptics } from '@/hooks/useHaptics';
 import { AppUpdate, checkForUpdate, downloadAndInstallUpdate } from '@/services/updater';
+import { darkThemeNames, lightThemeNames } from '@/theme/palettes';
 import * as Application from 'expo-application';
 import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { confirm, useAction } from '../app-state/actions';
 import { useApp, useQuery } from '../app-state/AppProvider';
 import { Button, Card, LinkRow, MoneyField, OptionChips, Screen, ScreenHeader, Stepper, ToggleRow } from '../components';
@@ -32,15 +33,15 @@ const THEMES = [
   { value: 'dark', label: 'Dark'}
 ]
 
-const COLOR_PALETTES = [
-  { value: 'default', label: 'Default'},
-  // { value: 'amoled', label: 'AMOLED'},
-  { value: 'dracula', label: 'Dracula'},
-  { value: 'nord', label: 'Nord'},
-  { value: 'tokyo-night', label: 'Tokyo Night'},
-]
+// const COLOR_PALETTES = [
+//   { value: 'default', label: 'Default'},
+//   { value: 'dracula', label: 'Dracula'},
+//   { value: 'nord', label: 'Nord'},
+//   { value: 'tokyo-night', label: 'Tokyo Night'},
+// ]
 
 export default function Settings() {
+  const systemScheme = useColorScheme();
   const router = useRouter();
   const { db, today } = useApp();
   const { colors } = useTheme();
@@ -55,6 +56,9 @@ export default function Settings() {
   const [hourly, setHourly] = useState('');
   const [loaded, setLoaded] = useState(false);
   const [update, setUpdate] = useState<AppUpdate | null>(null);
+  const [theme, setTheme] = useState<AppSettings['theme']>(s ? s.theme : 'system');
+
+  const COLOR_PALETTES = theme === 'dark' ? darkThemeNames : lightThemeNames;
 
   useEffect(() => {
     const checkUpdate = async () => {
@@ -192,10 +196,22 @@ export default function Settings() {
     }
   }
 
-  const handlePaletteChange = (palette: AppSettings['palette']) => {
+  const handleThemeChange = async (newTheme: AppSettings['theme']) => {
+    setTheme(newTheme);
+    const isDark =
+      newTheme === 'system' ? systemScheme === 'dark' : newTheme === 'dark';
+    const nextPalettes = isDark ? darkThemeNames : lightThemeNames;
+    const isPaletteValid = nextPalettes.some((p) => p.value === s.palette);
+    if (!isPaletteValid) {
+      await handlePaletteChange('default');
+    }
+    await save({ theme: newTheme });
+  }
+
+  const handlePaletteChange = async (palette: AppSettings['palette']) => {
     // TODO: Tried to change app icon but it is too buggy on android (will visit later.)
     // ExpoDynamicAppIcon.setAppIcon(palette === "default" ? "original" : palette === 'tokyo-night' ? "tokyoNight" : palette);
-    save({ palette });
+    await save({ palette });
   }
 
   return (
@@ -278,7 +294,7 @@ export default function Settings() {
           <OptionChips
             options={THEMES as { value: AppSettings['theme']; label: string }[]}
             value={s.theme}
-            onChange={haptics((theme) => save({ theme }), "light")}
+            onChange={haptics(handleThemeChange, "light")}
           />
           <Text style={[typography.titleSmall, { color: colors.textSecondary }]}>Palette</Text>
           <OptionChips
