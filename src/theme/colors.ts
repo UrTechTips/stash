@@ -167,50 +167,6 @@ export const defaultDarkPalette: Palette = {
   stopText: '#FF9690',
 };
 
-export const tokyoNightLight: Palette = {
-  isDark: false,
-  background: '#E1E2E7',
-  surface: '#F4F4F8',
-  surfaceRaised: '#D6D9E3',
-  outline: '#C3C8D7',
-
-  textPrimary: '#343B59',
-  textSecondary: '#565F89',
-  textDisabled: '#7A809C',
-
-  primary: '#34548A',
-  onPrimary: '#FFFFFF',
-  primaryContainer: '#D5DDF5',
-  onPrimaryContainer: '#26385F',
-
-  hero: '#24283B',
-  onHero: '#C0CAF5',
-  onHeroMuted: '#A9B1D6',
-  heroTrack: '#414868',
-  heroAccent: '#E0AF68',
-  onHeroAccent: '#24202A',
-
-  income: '#587539',
-  paceMarker: '#343B59',
-
-  buy: '#587539',
-  buyContainer: '#DDE8CE',
-  onBuy: '#344B22',
-
-  hold: '#965027',
-  holdContainer: '#F5E3C8',
-  onHold: '#603719',
-
-  save: '#34548A',
-  saveContainer: '#D5DDF5',
-  onSave: '#26385F',
-
-  stop: '#8C4351',
-  stopContainer: '#F4DCE2',
-  onStop: '#642C3B',
-  stopText: '#8C354A',
-};
-
 export const tokyoNightDark: Palette = {
   isDark: true,
   background: '#1A1B26',
@@ -342,51 +298,6 @@ export const nordDark: Palette = {
   stopContainer: '#59383F',
   onStop: '#F5D4D7',
   stopText: '#E6A0A6',
-};
-
-
-export const draculaLight: Palette = {
-  isDark: false,
-  background: '#F8F8F2',
-  surface: '#FFFFFF',
-  surfaceRaised: '#EFEEE8',
-  outline: '#DEDDD6',
-
-  textPrimary: '#282A36',
-  textSecondary: '#596273',
-  textDisabled: '#858A98',
-
-  primary: '#7656A8',
-  onPrimary: '#FFFFFF',
-  primaryContainer: '#E9E0F8',
-  onPrimaryContainer: '#422B68',
-
-  hero: '#343746',
-  onHero: '#F8F8F2',
-  onHeroMuted: '#C5C7D4',
-  heroTrack: '#484A5A',
-  heroAccent: '#FFB86C',
-  onHeroAccent: '#422B12',
-
-  income: '#287A52',
-  paceMarker: '#282A36',
-
-  buy: '#287A52',
-  buyContainer: '#D8F0E1',
-  onBuy: '#164D32',
-
-  hold: '#A76717',
-  holdContainer: '#FBE8CC',
-  onHold: '#633B0B',
-
-  save: '#7656A8',
-  saveContainer: '#E9E0F8',
-  onSave: '#422B68',
-
-  stop: '#C43C59',
-  stopContainer: '#F9DDE4',
-  onStop: '#721D32',
-  stopText: '#A92D49',
 };
 
 export const draculaDark: Palette = {

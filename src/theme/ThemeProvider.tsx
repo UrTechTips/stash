@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
-import { defaultDarkPalette, defaultLightPalette, draculaDark, draculaLight, nordDark, nordLight, tokyoNightDark, tokyoNightLight, type Palette } from './colors';
+import { defaultLightPalette, type Palette } from './colors';
+import { darkPalettes, lightPalettes } from './palettes';
 
 type Scheme = "light" | "dark" | "system";
 type PaletteName = "default" | "dracula" | "nord" | "tokyo-night";
@@ -9,12 +10,12 @@ type Theme = { colors: Palette; isDark: boolean };
 
 const ThemeContext = createContext<Theme>({ colors: defaultLightPalette, isDark: false });
 
-const VALID_PALETTES: Record<PaletteName, Record<'dark' | 'light', Palette>> = {
-  default: { dark: defaultDarkPalette, light: defaultLightPalette },
-  dracula: { dark: draculaDark, light: draculaLight },
-  nord: { dark: nordDark, light: nordLight },
-  'tokyo-night': { dark: tokyoNightDark, light: tokyoNightLight },
-}
+const DARK_PALETTES = Object.fromEntries(
+  Object.entries(darkPalettes).map(([k, v]) => [k.toLowerCase().replaceAll(' ', '-'), v])
+);;
+const LIGHT_PALETTES = Object.fromEntries(
+  Object.entries(lightPalettes).map(([k, v]) => [k.toLowerCase().replaceAll(' ', '-'), v])
+);
 
 export function ThemeProvider({
   scheme = 'system',
@@ -28,7 +29,7 @@ export function ThemeProvider({
   const system = useColorScheme();
   const isDark = scheme === 'system' ? system === 'dark' : scheme === 'dark';
   const value = useMemo<Theme>(
-    () => ({ colors: isDark ? VALID_PALETTES[palette].dark : VALID_PALETTES[palette].light, isDark }),
+    () => ({ colors: isDark ? DARK_PALETTES[palette] : LIGHT_PALETTES[palette], isDark }),
     [isDark],
   );
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

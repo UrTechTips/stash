@@ -90,6 +90,7 @@ export default function Settings() {
     setSaving(s.savingRateEstimate ? minorToInput(s.savingRateEstimate) : '');
     setHourly(s.hourlyEarnings ? minorToInput(s.hourlyEarnings) : '');
     setLoaded(true);
+    setTheme(s.theme);
   }
 
   if (!s) return <Screen><ScreenHeader title="Settings" /></Screen>;

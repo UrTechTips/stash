@@ -12,13 +12,5 @@ export const lightPalettes: Record<string, Palette> = {
   'Nord': nordLight,
 }
 
-export const darkThemeNames = [
-    { value: 'default', label: 'Default'},
-    { value: 'tokyo-night', label: 'Tokyo Night'},
-    { value: 'nord', label: 'Nord'},
-    { value: 'dracula', label: 'Dracula'},
-]
-export const lightThemeNames = [
-    { value: 'default', label: 'Default'},
-    { value: 'nord', label: 'Nord'},
-]
+export const darkThemeNames = Object.keys(darkPalettes).map((e) => ({value: e.toLowerCase().replace(' ', '-'), label: e}));
+export const lightThemeNames = Object.keys(lightPalettes).map((e) => ({value: e.toLowerCase().replace(' ', '-'), label: e}));
