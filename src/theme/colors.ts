@@ -343,3 +343,89 @@ export const draculaDark: Palette = {
   onStop: '#FFD7DC',
   stopText: '#FF8585',
 };
+
+export const webSlingerLight: Palette = {
+  isDark: false,
+
+  background: '#F5F7FA',
+  surface: '#FFFFFF',
+  surfaceRaised: '#EBF0F7',
+  outline: '#CBD5E1',
+
+  textPrimary: '#0F172A',
+  textSecondary: '#475569',
+  textDisabled: '#94A3B8',
+
+  primary: '#D3222A',
+  onPrimary: '#FFFFFF',
+  primaryContainer: '#FDE8E9',
+  onPrimaryContainer: '#7F1117',
+
+  hero: '#163E8A',
+  onHero: '#FFFFFF',
+  onHeroMuted: '#B8CCF0',
+  heroTrack: '#2854A8',
+  heroAccent: '#E62E38',
+  onHeroAccent: '#FFFFFF',
+
+  income: '#15803D',
+
+  paceMarker: '#2563EB',
+
+  buy: '#15803D',
+  buyContainer: '#DCFCE7',
+  onBuy: '#14532D',
+  hold: '#B45309',
+  holdContainer: '#FEF3C7',
+  onHold: '#78350F',
+  save: '#1D4ED8',
+  saveContainer: '#DBEAFE',
+  onSave: '#1E3A8A',
+  stop: '#D3222A',
+  stopContainer: '#FEE2E2',
+  onStop: '#7F1D1D',
+  stopText: '#B91C1C',
+};
+
+export const webSlingerDark: Palette = {
+  isDark: true,
+
+  background: '#0B0E14',
+  surface: '#131924',
+  surfaceRaised: '#1C2536',
+  outline: '#2A364D',
+
+  textPrimary: '#F1F5F9',
+  textSecondary: '#94A3B8',
+  textDisabled: '#475569',
+
+  primary: '#E02E37',
+  onPrimary: '#FFFFFF',
+  primaryContainer: '#3D1216',
+  onPrimaryContainer: '#FFB3B6',
+
+  hero: '#11254D',
+  onHero: '#F8FAFC',
+  onHeroMuted: '#9EB8E8',
+  heroTrack: '#1E3D7A',
+  heroAccent: '#E62E38',
+  onHeroAccent: '#FFFFFF',
+
+  income: '#4ADE80',
+
+  paceMarker: '#60A5FA',
+
+  buy: '#4ADE80',
+  buyContainer: '#123322',
+  onBuy: '#BBF7D0',
+  hold: '#FBBF24',
+  holdContainer: '#38260E',
+  onHold: '#FDE68A',
+  save: '#60A5FA',
+  saveContainer: '#13294B',
+  onSave: '#BFDBFE',
+  stop: '#F87171',
+  stopContainer: '#3B1418',
+  onStop: '#FECACA',
+  stopText: '#FCA5A5',
+};

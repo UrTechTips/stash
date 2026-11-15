@@ -1,15 +1,17 @@
-import { Palette, defaultDarkPalette, defaultLightPalette, draculaDark, nordDark, nordLight, tokyoNightDark } from './colors';
+import { Palette, defaultDarkPalette, defaultLightPalette, draculaDark, nordDark, nordLight, tokyoNightDark, webSlingerDark, webSlingerLight } from './colors';
 
 export const darkPalettes: Record<string, Palette> = {
   'Default': defaultDarkPalette,
   'Tokyo Night': tokyoNightDark,
   'Nord': nordDark,
   'Dracula': draculaDark,
+  'Web Slinger': webSlingerDark,
 }
 
 export const lightPalettes: Record<string, Palette> = {
   'Default': defaultLightPalette,
   'Nord': nordLight,
+  'Web Slinger': webSlingerLight,
 }
 
 export const darkThemeNames = Object.keys(darkPalettes).map((e) => ({value: e.toLowerCase().replace(' ', '-'), label: e}));
