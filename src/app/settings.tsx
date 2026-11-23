@@ -338,7 +338,7 @@ export default function Settings() {
               <Text style={[typography.labelSmall, { color: colors.textPrimary }]}>
                 New Version Available: {update.version}
               </Text>
-              <Button label={isUpdating ? `Updating... ${updateProgress !== null ? Math.round(updateProgress * 100) : 0}%` : "Update"} kind="primary" onPress={handleUpdate} disabled={isUpdating} />
+              <Button label={isUpdating ? `Updating... ${updateProgress !== null ? Math.round(updateProgress * 100) : 0}%` : "Update"} kind="primary" onPress={handleUpdate} disabled={isUpdating}/>
             </>
           )}
         </Card>
