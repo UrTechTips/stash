@@ -57,6 +57,8 @@ export default function Settings() {
   const [loaded, setLoaded] = useState(false);
   const [update, setUpdate] = useState<AppUpdate | null>(null);
   const [theme, setTheme] = useState<AppSettings['theme']>(s ? s.theme : 'system');
+  const [updateProgress, setUpdateProgress] = useState<number | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const COLOR_PALETTES = theme === 'dark' ? darkThemeNames : lightThemeNames;
 
@@ -140,11 +142,18 @@ export default function Settings() {
   const handleUpdate = async () => {
     if (!update) return;
     try {
+      setIsUpdating(true);
       await run(async () => {
-        await downloadAndInstallUpdate(update);
+        await downloadAndInstallUpdate(update, (downloadProgress) => {
+          const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite;
+          setUpdateProgress(progress);
+        });
       });
     } catch (error) {
       console.error('Error updating app:', error);
+    } finally {
+      setIsUpdating(false);
+      setUpdateProgress(null);
     }
   }
 
@@ -329,7 +338,7 @@ export default function Settings() {
               <Text style={[typography.labelSmall, { color: colors.textPrimary }]}>
                 New Version Available: {update.version}
               </Text>
-              <Button label="Update" kind="primary" onPress={handleUpdate} />
+              <Button label={isUpdating ? `Updating... ${updateProgress !== null ? Math.round(updateProgress * 100) : 0}%` : "Update"} kind="primary" onPress={handleUpdate} disabled={isUpdating} />
             </>
           )}
         </Card>
