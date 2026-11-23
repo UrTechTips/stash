@@ -136,7 +136,7 @@ const sha256Hex = async (file: FileSystem.File): Promise<string> => {
         .join('');
 };
 
-export const downloadAndInstallUpdate = async (update: AppUpdate): Promise<void> => {
+export const downloadAndInstallUpdate = async (update: AppUpdate, downloadCallback: (progress: any) => void): Promise<void> => {
     if (Platform.OS !== 'android') {
         throw new Error('Update installation is only supported on Android.');
     }
@@ -148,10 +148,17 @@ export const downloadAndInstallUpdate = async (update: AppUpdate): Promise<void>
 
     let downloadedFile: FileSystem.File;
     try {
-        const downloadResult = await LegacyFileSystem.downloadAsync(
+        const downloadResumable = LegacyFileSystem.createDownloadResumable(
             update.apkUrl, 
-            destination.uri
+            destination.uri,
+            {},
+            downloadCallback
         );
+
+        const downloadResult = await downloadResumable.downloadAsync();
+        if (!downloadResult) {
+            throw new Error('Download failed: no result returned.');
+        }
         console.log(`Download result: ${JSON.stringify(downloadResult)}`);
 
         if (downloadResult.status !== 200) {

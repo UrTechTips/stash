@@ -40,6 +40,10 @@ export default function RootLayout() {
       if (data?.type === 'update' && data?.update) {
         await downloadAndInstallUpdate(
           data.update as Parameters<typeof downloadAndInstallUpdate>[0],
+          (downloadProgress) => {
+            const progress = downloadProgress.totalBytesWritten / downloadProgress.totalBytesExpectedToWrite;
+            console.log(`Download progress: ${(progress * 100).toFixed(2)}%`);
+          }
         );
       }
     };
